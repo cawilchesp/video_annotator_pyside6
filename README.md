@@ -1,0 +1,2 @@
+# TrafficVideoAnnotator
+Traffic Video Annotator es una aplicación para videos de tráfico urbano que permite realizar y registrar anotaciones de texto y formas, realizar mediciones en metros sobre la escena a partir de un sencillo proceso de calibración, y capturar muestras/ejemplos de objetos de interés de la escena, para el desarrollo y evaluación de algoritmos de inteligencia artificial en tareas de detección y seguimientos de objetos sobre imágenes y videos.
