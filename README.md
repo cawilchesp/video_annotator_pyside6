@@ -7,4 +7,4 @@ The minimum requirements for using this application are:
 - Display with a minimum resolution of 1366 x 768 pixels.
 - Microsoft Visual C++ 2015 Redistributable (x86).
 
-For installation, the files must be unzipped in any folder on the computer, or on any removable memory.
+For installation, the files must be unzipped in any folder on the computer, or on any removable media.
