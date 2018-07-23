@@ -23,7 +23,7 @@ The files must be unzipped in any folder on the computer, or in any removable me
 
 ### Usage
 
-
+See `Manual.pdf`.
 
 ### Bugs and Comments
 
