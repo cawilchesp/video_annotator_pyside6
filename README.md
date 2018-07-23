@@ -2,7 +2,7 @@
 
 Traffic Video Annotator is an application for videos of urban traffic that allows you to make and record text and form annotations, to take measurements in meters on the scene from a simple calibration process, and to capture samples/examples of objects of interest of the scene, for development and evaluation of algorithms of artificial intelligence, in tasks of object detection and tracking on images and videos.
 
-Copyright (c) 2018 Carlos Wilches, Julian Quiroga
+Copyright ©️ 2018 Carlos Wilches, Julian Quiroga
  
 Pontificia Universidad Javeriana, Bogotá Colombia
 
