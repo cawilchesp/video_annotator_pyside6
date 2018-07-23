@@ -17,9 +17,9 @@ This program is distributed WITHOUT ANY WARRANTY.
 Requirements:
 1. Windows 7/8/8.1/10.
 2. Display with a minimum resolution of 1366 x 768 pixels.
-3. Microsoft Visual C++ 2015 Redistributable **(x86)** (vcredist_x86.exe included, obtained from: https://www.microsoft.com/en-us/download/details.aspx?id=53587).
+3. Microsoft Visual C++ 2015 Redistributable **(x86)** (vcredist_x86.exe included), obtained from: https://www.microsoft.com/en-us/download/details.aspx?id=53587).
 
-The files must be unzipped in any folder on the computer, or on any removable media.
+The files must be unzipped in any folder on the computer, or in any removable media.
 
 ### Usage
 
