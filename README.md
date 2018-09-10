@@ -19,7 +19,7 @@ Requirements:
 2. Display with a minimum resolution of 1366 x 768 pixels
 3. Microsoft Visual C++ 2017 Redistributable **(x86)** (vcredist_x86.exe included), obtained from: https://aka.ms/vs/15/release/VC_redist.x86.exe
 
-The files must be unzipped in any folder on the computer, or in any removable media.
+The files must be present in any folder on the computer, or in any removable media.
 
 ### Usage
 
