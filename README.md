@@ -21,6 +21,8 @@ Requirements:
 
 The files must be present in any folder on the computer, or in any removable media.
 
+In **Releases**, an installer can be downloaded, including Microsoft Visual C++ 2017 Redistributable **(x86)** (VC Redist can be cancelled, presenting an error that can be omited to continue the installation of Traffic Video Annotator).
+
 ### Usage
 
 See `Manual.pdf`.
