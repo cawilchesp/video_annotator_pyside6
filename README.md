@@ -1,4 +1,4 @@
-## Binaries for Traffic Video Annotator V 1.0
+## Binaries for Traffic Video Annotator V 2.0
 
 Traffic Video Annotator is an application for videos of urban traffic that allows you to make and record text and form annotations, to take measurements in meters on the scene from a simple calibration process, and to capture samples/examples of objects of interest of the scene, for development and evaluation of algorithms of artificial intelligence, in tasks of object detection and tracking on images and videos.
 
@@ -17,11 +17,9 @@ This program is distributed WITHOUT ANY WARRANTY.
 Requirements:
 1. Windows 7/8/8.1/10
 2. Display with a minimum resolution of 1366 x 768 pixels
-3. Microsoft Visual C++ 2017 Redistributable **(x86)** (vcredist_x86.exe included), obtained from: https://aka.ms/vs/15/release/VC_redist.x86.exe
+3. Microsoft Visual C++ 2017 Redistributable **(x86)**.
 
-The files must be present in any folder on the computer, or in any removable media.
-
-In **Releases**, an installer can be downloaded, including Microsoft Visual C++ 2017 Redistributable **(x86)** (VC Redist can be cancelled, presenting an error that can be omited to continue the installation of Traffic Video Annotator).
+In **Releases**, an installer can be downloaded, including Microsoft Visual C++ 2017 Redistributable **(x86)**.
 
 ### Usage
 
