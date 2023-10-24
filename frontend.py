@@ -4,14 +4,13 @@ Frontend
 This file contains main UI class and methods to control components operations.
 """
 
-from PyQt6 import QtGui, QtWidgets, QtCore
-from PyQt6.QtWidgets import QWidget, QApplication
-from PyQt6.QtGui import QPixmap, QRegularExpressionValidator
-from PyQt6.QtCore import Qt, QSettings, QRegularExpression
+from PySide6 import QtGui, QtWidgets, QtCore
+from PySide6.QtWidgets import QWidget, QApplication
+from PySide6.QtGui import QPixmap, QRegularExpressionValidator
+from PySide6.QtCore import Qt, QSettings, QRegularExpression
 
 import sys
 import pathlib
-# import psycopg2
 import cv2
 
 import material3_components as mt3
