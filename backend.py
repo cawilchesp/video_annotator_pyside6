@@ -1,6 +1,6 @@
-from PyQt6 import QtWidgets, QtGui
-from PyQt6.QtGui import QPixmap
-from PyQt6.QtCore import Qt, QSettings
+from PySide6 import QtWidgets, QtGui
+from PySide6.QtGui import QPixmap
+from PySide6.QtCore import Qt, QSettings
 
 import sys
 import cv2
