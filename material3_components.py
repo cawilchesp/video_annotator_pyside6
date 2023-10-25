@@ -4,33 +4,41 @@ PyQt Components adapted to follow Material Design 3 guidelines
 
 """
 
-from PyQt6 import QtGui, QtWidgets, QtCore
-from PyQt6.QtCore import Qt
+from PySide6 import QtGui, QtWidgets, QtCore
+from PySide6.QtCore import Qt
 
 import sys
 
 light = {
     'background': '#E5E9F0',
-    'surface': '#B2B2B2',
-    'primary': '#42A4F5',
-    'secondary': '#FF2D55',
     'on_background': '#000000',
+
+    'surface': '#B2B2B2',
     'on_surface': '#000000',
+    
+    'primary': '#42A4F5',
     'on_primary': '#000000',
+    
+    'secondary': '#FF2D55',
     'on_secondary': '#000000',
+
     'disable': '#B2B2B2',
     'error': ''
 }
 
 dark = {
     'background': '#3B4253',
-    'surface': '#2E3441',
-    'primary': '#42A4F5',
-    'secondary': '#FF2D55',
     'on_background': '#E5E9F0',
+
+    'surface': '#2E3441',
     'on_surface': '#E5E9F0',
+
+    'primary': '#42A4F5',
     'on_primary': '#000000',
+
+    'secondary': '#FF2D55',
     'on_secondary': '#000000',
+    
     'disable': '#B2B2B2',
     'error': ''
 }
