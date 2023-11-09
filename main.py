@@ -303,15 +303,15 @@ class MainWindow(QMainWindow):
         if state: 
             # for key in self.ui.gui_widgets.keys():
             #     self.ui.gui_widgets[key].setThemeStyle(True)
+            with open('light_theme.qss', "r") as theme_qss:
+                self.setStyleSheet(theme_qss.read())
             self.ui.gui_widgets['dark_theme_button'].setState(False, True)
 
+            # Save settings
             self.theme_value = True
-            theme_file = 'light_theme.qss'            
-            with open(theme_file, "r") as theme_qss:
-                self.setStyleSheet(theme_qss.read())
             self.config['THEME'] = True
             with open(self.settings_file, 'w') as file:
-                yaml.dump(self.config, file)            
+                yaml.dump(self.config, file)
         
         self.ui.gui_widgets['light_theme_button'].setState(True, True)
 
@@ -331,15 +331,15 @@ class MainWindow(QMainWindow):
         if state: 
             # for key in self.ui.gui_widgets.keys():
             #     self.ui.gui_widgets[key].setThemeStyle(False)
-            self.ui.gui_widgets['light_theme_button'].setState(False, False)
-
-            self.theme_value = False
-            theme_file = 'dark_theme.qss'
-            with open(theme_file, "r") as theme_qss:
+            with open('dark_theme.qss', "r") as theme_qss:
                 self.setStyleSheet(theme_qss.read())
+            self.ui.gui_widgets['light_theme_button'].setState(False, False)
+            
+            # Save settings
+            self.theme_value = False
             self.config['THEME'] = False
             with open(self.settings_file, 'w') as file:
-                yaml.dump(self.config, file)   
+                yaml.dump(self.config, file)
 
         self.ui.gui_widgets['dark_theme_button'].setState(True, False)
 
