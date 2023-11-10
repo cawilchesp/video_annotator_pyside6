@@ -75,28 +75,6 @@ class MainWindow(QMainWindow):
         with open(theme_qss_file, "r") as theme_qss:
             self.setStyleSheet(theme_qss.read())
 
-
-
-
-        # # -------------
-        # # Card Proyecto
-        # # -------------
-        # self.proyecto_card = mt3.Card(self, 'proyecto_card',
-        #     (8, 64, 180, 128), ('Proyecto', 'Project'), 
-        #     self.theme_value, self.language_value)
-
-        # y_1 = 48
-        # self.recientes_menu = mt3.Menu(self.proyecto_card, 'recientes_menu',
-        #     (8, y_1, 164), 10, 10, {}, self.theme_value, self.language_value)
-        # # for key, value in self.recent_videos.items():
-        # #     self.recientes_menu.addItem(key)
-        # # self.recientes_menu.setCurrentIndex(-1)
-
-        # y_1 += 40
-        # self.nuevo_button = mt3.IconButton(self.proyecto_card, 'nuevo_button',
-        #     (140, y_1), 'new.png', self.theme_value)
-        # self.nuevo_button.clicked.connect(self.on_nuevo_button_clicked)
-        
         
 
 
@@ -144,70 +122,7 @@ class MainWindow(QMainWindow):
         # self.cuboide_button = mt3.IconButton(self.formas_card, 'cuboide_button',
         #     (135, y_4), 'cuboid.png', self.theme_value)
 
-        # # ----------
-        # # Card Video
-        # # ----------
-        # self.video_card = mt3.Card(self, 'video_card',
-        #     (196, 64, 1300, 68), ('', ''), self.theme_value, self.language_value)
         
-        # x_2 = 8
-        # self.slow_button = mt3.IconButton(self.video_card, 'slow_button',
-        #     (x_2, 22), 'slow_play.png', self.theme_value)
-        # self.slow_button.clicked.connect(self.on_slow_button_clicked)
-
-        # x_2 += 40
-        # self.backFrame_button = mt3.IconButton(self.video_card, 'backFrame_button',
-        #     (x_2, 22), 'back_frame.png', self.theme_value)
-        # self.backFrame_button.clicked.connect(self.on_backFrame_button_clicked)
-
-        # x_2 += 40
-        # self.backPlay_button = mt3.IconButton(self.video_card, 'backPlay_button',
-        #     (x_2, 22), 'back_play.png', self.theme_value)
-        # self.backPlay_button.clicked.connect(self.on_backPlay_button_clicked)
-
-        # x_2 += 40
-        # self.pause_button = mt3.IconButton(self.video_card, 'pause_button',
-        #     (x_2, 22), 'pause.png', self.theme_value)
-        # self.pause_button.clicked.connect(self.on_pause_button_clicked)
-
-        # x_2 += 40
-        # self.play_button = mt3.IconButton(self.video_card, 'play_button',
-        #     (x_2, 22), 'play.png', self.theme_value)
-        # self.play_button.clicked.connect(self.on_play_button_clicked)
-
-        # x_2 += 40
-        # self.frontFrame_button = mt3.IconButton(self.video_card, 'frontFrame_button',
-        #     (x_2, 22), 'front_frame.png', self.theme_value)
-        # self.frontFrame_button.clicked.connect(self.on_frontFrame_button_clicked)
-
-        # x_2 += 40
-        # self.fastPlay_button = mt3.IconButton(self.video_card, 'fastPlay_button',
-        #     (x_2, 22), 'fast_play.png', self.theme_value)
-        # self.fastPlay_button.clicked.connect(self.on_fastPlay_button_clicked)
-
-        # x_2 += 40
-        # self.video_slider = mt3.Slider(self.video_card, 'video_slider',
-        #     (x_2, 22, 890), self.theme_value)
-        # self.video_slider.sliderMoved.connect(self.on_video_slider_sliderMoved)
-        # self.video_slider.sliderReleased.connect(self.on_video_slider_sliderReleased)
-        
-        # x_2 += 900
-        # self.frame_text = mt3.TextField(self.video_card,
-        #     (x_2, 8, 100), ('Cuadro', 'Frame'), self.theme_value, self.language_value)
-        # self.frame_text.text_field.setValidator(self.regExp1)
-        # # self.frame_text.returnPressed.connect(self.on_frame_text_returnPressed)
-
-        # # -----------
-        # # Card Imagen
-        # # -----------
-        # self.imagen_card = mt3.Card(self, 'imagen_card',
-        #     (196, 140, 800, 600), ('Imágenes', 'Images'), 
-        #     self.theme_value, self.language_value)
-
-        # self.imagen_label = QtWidgets.QLabel(self.imagen_card)
-        # self.imagen_label.setGeometry(10, 10, 1280, 720)
-        # self.imagen_label.setFrameStyle(QtWidgets.QFrame.Shape.Box)
-
         # # -------------
         # # Card Opciones
         # # -------------
@@ -320,7 +235,7 @@ class MainWindow(QMainWindow):
     # ------------------
     # Funciones Proyecto
     # ------------------
-    def on_nuevo_button_clicked(self) -> None:
+    def on_project_new_button_clicked(self) -> None:
         """ Configure new project """
         self.new_window = project.NewProject()
         self.new_window.exec()
@@ -382,11 +297,6 @@ class MainWindow(QMainWindow):
                     QtWidgets.QMessageBox.critical(self, 'Error en la creación', 'La carpeta ya existe')
                 elif self.language_value == 1:
                     QtWidgets.QMessageBox.critical(self, 'Creation Error', 'Folder already exists')
-
-
-    def on_source_add_button_clicked(self):
-        return None
-
 
 
     # ----------------
