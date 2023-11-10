@@ -81,19 +81,19 @@ class UI(QWidget):
         # -----------
         # Card Source
         # -----------
-        self.gui_widgets['source_card'] = MD3Card(parent, {
+        self.gui_widgets['project_card'] = MD3Card(parent, {
             'position': (8, 8),
             'size': (180, 88),
             'type': 'outlined',
-            'titles': ('Origen del Video', 'Video Source'),
+            'titles': ('Proyecto', 'Project'),
             'language': self.language_value } )
         
-        self.gui_widgets['source_add_button'] = MD3Button(self.gui_widgets['source_card'], {
+        self.gui_widgets['project_new_button'] = MD3Button(self.gui_widgets['project_card'], {
             'position': (140, 48),
             'type': 'filled',
             'icon': 'new',
             'theme_color': self.theme_color,
-            'clicked': parent.on_source_add_button_clicked } )
+            'clicked': parent.on_project_new_button_clicked } )
 
         # ----------------
         # Card Information
