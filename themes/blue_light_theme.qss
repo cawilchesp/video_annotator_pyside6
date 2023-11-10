@@ -1,0 +1,356 @@
+QWidget {
+    background-color: hsl(0, 0%, 100%);
+}
+
+/* Card */
+MD3Card[filled=true] {
+    border: 0px solid;
+    border-radius: 12px;
+    background-color: hsl(0, 0%, 90%)
+}
+MD3Card[outlined=true] {
+    border: 2px solid hsl(204, 86%, 53%);
+    border-radius: 12px;
+    background-color: transparent
+}
+MD3Card QLabel {
+    background-color: transparent;
+    color: hsl(0, 0%, 21%)
+}
+
+/* Button */
+MD3Button {
+    border-style: solid;
+    border-radius: 16;
+}
+MD3Button[filled=true] {
+    border-width: 0px;
+    background-color: hsl(204, 86%, 53%);
+    color: hsl(0, 0%, 4%)
+}
+MD3Button[tonal=true] {
+    border-width: 0px;
+    background-color: hsl(204, 86%, 86%);
+    color: hsl(0, 0%, 4%)
+}
+MD3Button[outlined=true] {
+    border-width: 2px;
+    border-color: hsl(204, 86%, 53%);
+    background-color: transparent;
+    color: hsl(204, 86%, 53%)
+}
+MD3Button[standard=true] {
+    border-width: 0px;
+    background-color: transparent;
+    color: hsl(204, 86%, 53%)
+}
+MD3Button:hover {
+    background-color: hsl(348, 100%, 61%);
+}
+MD3Button:disabled {
+    background-color: hsl(0, 0%, 71%);
+    color: hsl(0, 0%, 29%)
+}
+
+/* Theme Button */
+MD3ThemeButton {
+    border-style: solid;
+    border-radius: 16;
+}
+MD3ThemeButton[filled=true] {
+    border-width: 0px;
+    background-color: hsl(204, 86%, 53%);
+    color: hsl(0, 0%, 4%)
+}
+MD3ThemeButton[tonal=true] {
+    border-width: 0px;
+    background-color: hsl(204, 86%, 86%);
+    color: hsl(0, 0%, 4%)
+}
+MD3ThemeButton[outlined=true] {
+    border-width: 2px;
+    border-color: hsl(204, 86%, 53%);
+    background-color: transparent;
+    color: hsl(204, 86%, 53%)
+}
+MD3ThemeButton[standard=true] {
+    border-width: 0px;
+    background-color: transparent;
+    color: hsl(204, 86%, 53%)
+}
+MD3ThemeButton:hover {
+    background-color: hsl(348, 100%, 61%);
+}
+MD3ThemeButton:disabled {
+    background-color: hsl(0, 0%, 71%);
+    color: hsl(0, 0%, 29%)
+}
+
+/* Segmented Button */
+MD3SegmentedButton {
+    border: 1px solid hsl(204, 86%, 53%);
+    padding: 0 8 0 8;
+    background-color: transparent;
+    color: hsl(204, 86%, 53%)
+}
+MD3SegmentedButton[left=true] {
+    border-top-left-radius: 16;
+    border-bottom-left-radius: 16;
+}
+MD3SegmentedButton[center=true] {
+    border-radius: 0;
+}
+MD3SegmentedButton[right=true] {
+    border-top-right-radius: 16;
+    border-bottom-right-radius: 16;
+}
+MD3SegmentedButton:checked {
+    background-color: hsl(204, 86%, 53%);
+    color: hsl(0, 0%, 4%)
+}
+MD3SegmentedButton:hover {
+    background-color: hsl(348, 100%, 61%);
+}
+MD3SegmentedButton:disabled {
+    background-color: hsl(0, 0%, 71%);
+    color: hsl(0, 0%, 29%)
+}
+
+/* Switch */
+MD3Switch {
+    border: 0px solid;
+    background-color: transparent;
+}
+MD3Switch QToolButton {
+    background-color: transparent;
+}
+MD3Switch QToolButton[left=true] {
+    border: 2px solid hsl(204, 86%, 53%);
+    border-right-width: 0px;
+    border-top-left-radius: 16;
+    border-bottom-left-radius: 16;
+}
+MD3Switch QToolButton[right=true]{
+    border: 2px solid hsl(204, 86%, 53%);
+    border-left-width: 0px;
+    border-top-right-radius: 16;
+    border-bottom-right-radius: 16;
+}
+MD3Switch QToolButton:checked {
+    background-color: hsl(204, 86%, 53%);
+}
+MD3Switch QToolButton:disabled {
+    background-color: hsl(0, 0%, 71%);
+}
+
+/* Chip */
+MD3Chip {
+    border: 1px solid hsl(204, 86%, 53%);
+    border-radius: 8;
+    padding: 0 8 0 8;
+    background-color: transparent;
+    color: hsl(204, 86%, 53%)
+}
+MD3Chip:checked {
+    background-color: hsl(204, 86%, 53%);
+    color: hsl(0, 0%, 4%)
+}
+MD3Chip:hover {
+    background-color: hsl(348, 100%, 61%);
+}
+MD3Chip:disabled {
+    background-color: hsl(0, 0%, 71%);
+    color: hsl(0, 0%, 29%)
+}
+
+/* Menu */
+MD3Menu {
+    border: 1px solid hsl(204, 86%, 53%);
+    border-radius: 4; 
+    background-color: transparent; 
+    color: hsl(204, 86%, 53%)
+}
+MD3Menu:disabled {
+    background-color: hsl(0, 0%, 71%);
+    color: hsl(0, 0%, 29%)
+}
+MD3Menu::drop-down:button {
+    background-color: transparent
+}
+MD3Menu::down-arrow {
+    width: 24;
+    height: 24;
+    image: url(icons/menu_right_blue.png)
+}
+MD3Menu QListView {
+    border: 1px solid hsl(204, 86%, 53%);
+    border-radius: 4;
+}
+MD3Menu QListView::item:selected {
+    background-color: hsl(204, 86%, 53%)
+}
+MD3Menu QListView::item:hover {
+    background-color: hsl(204, 86%, 53%)
+}
+MD3Menu[filled=true] QListView {
+    background-color: hsl(0, 0%, 29%);
+    color: hsl(204, 86%, 86%)
+}
+MD3Menu[outlined=true] QListView {
+    background-color: hsl(0, 0%, 4%);
+    color: hsl(204, 86%, 86%)
+}
+
+/* TextField */
+MD3TextField {
+    border: 0px solid;
+    border-radius: 4;
+    background-color: transparent
+}
+MD3TextField:disabled {
+    background-color: hsl(0, 0%, 71%);
+    color: hsl(0, 0%, 29%)
+}
+MD3TextField QLineEdit {
+    border: 1px solid hsl(204, 86%, 53%);
+    border-radius: 4;
+    padding: 0 8 0 8;
+    background-color: transparent;
+    color: hsl(204, 86%, 53%)
+}
+MD3TextField QLineEdit:disabled {
+    background-color: hsl(0, 0%, 71%);
+    color: hsl(0, 0%, 29%)
+}
+MD3TextField QLabel {
+    border: 0px solid;
+    color: hsl(204, 86%, 53%)
+}
+MD3TextField[filled=true] QLabel {
+    background-color: hsl(0, 0%, 90%);
+}
+MD3TextField[outlined=true] QLabel {
+    background-color: hsl(0, 0%, 100%);
+}
+MD3TextField QLabel:disabled {
+    background-color: hsl(0, 0%, 71%);
+    color: hsl(0, 0%, 29%)
+}
+
+/* Date Picker */
+MD3DatePicker {
+    border: 0px solid; 
+    border-radius: 4; 
+    background-color: transparent
+}
+MD3DatePicker:disabled {
+    background-color: hsl(0, 0%, 71%);
+    color: hsl(0, 0%, 29%)
+}
+MD3DatePicker QDateEdit {
+    border: 1px solid hsl(204, 86%, 53%);
+    border-radius: 4;
+    padding: 0 8 0 8;
+    background-color: transparent;
+    color: hsl(204, 86%, 53%)
+}
+MD3DatePicker QDateEdit:disabled {
+    background-color: hsl(0, 0%, 71%);
+    color: hsl(0, 0%, 29%)
+}
+MD3DatePicker QDateEdit::drop-down {
+    background-color: hsl(204, 86%, 53%);
+    width: 32; 
+    height: 32; 
+    subcontrol-position: center right; 
+    left: -4;
+    border-radius: 16
+}
+MD3DatePicker QDateEdit::down-arrow {
+    image: url(icons/calendar.png);
+    width: 16;
+    height: 16
+}
+MD3DatePicker QLabel {
+    border: 0px solid;
+    color: hsl(204, 86%, 53%)
+}
+MD3DatePicker[filled=true] QLabel {
+    background-color: hsl(0, 0%, 90%);
+}
+MD3DatePicker[outlined=true] QLabel {
+    background-color: hsl(0, 0%, 100%);
+}
+MD3DatePicker QLabel:disabled {
+    background-color: hsl(0, 0%, 71%);
+    color: hsl(0, 0%, 29%)
+}
+
+/* Label */
+MD3Label {
+    border-style: solid;
+    border-radius: 16px;
+    background-color: transparent;
+}
+MD3Label[subtitle=true] {
+    border-width: 0px;
+    padding: 0;
+    color: hsl(204, 86%, 53%);
+}
+MD3Label[icon=true] {
+    border-width: 0px;
+    padding: 4
+}
+MD3Label[value=true] {
+    border-width: 2px;
+    padding: 0;
+    color: hsl(204, 86%, 53%)
+}
+MD3Label[color=true] {
+    border-width: 2px;
+    border-color: hsl(204, 86%, 53%);
+    padding: 0
+}
+
+/* Slider */
+MD3Slider { 
+    background-color: transparent
+}
+MD3Slider::groove:horizontal {
+    background: hsl(204, 86%, 53%);
+    height: 4px
+}
+MD3Slider::handle:horizontal {
+    background-color: hsl(204, 86%, 53%);
+    width: 20px; 
+    height: 20px; 
+    margin: -8px 0;
+    border-radius: 10px
+}
+MD3Slider::handle:disabled {
+    background-color: hsl(0, 0%, 71%)
+}
+MD3Slider::add-page:horizontal {
+    background: hsl(204, 86%, 29%)
+}
+MD3Slider::sub-page:horizontal {
+    background: hsl(204, 86%, 53%)
+}
+MD3Slider::add-page:disabled {
+    background: hsl(0, 0%, 71%)
+}
+MD3Slider::sub-page:disabled {
+    background: hsl(0, 0%, 71%)
+}
+
+/* Divider */
+MD3Divider {
+    border: 1px solid hsl(204, 86%, 53%);
+    background-color: transparent
+}
+
+/* Image Label */
+MD3ImageLabel {
+    border: 1px solid hsl(204, 86%, 53%);
+    background-color: transparent
+}
