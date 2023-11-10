@@ -56,6 +56,7 @@ class MainWindow(QMainWindow):
         self.video_fps = None
         self.aspect_ratio = 1.0
 
+        # self.play_state = False
         self.timer_play = None
         self.timer_reverse = None
 
@@ -365,6 +366,99 @@ class MainWindow(QMainWindow):
         self.frame_number = int(self.ui.gui_widgets['frame_value_textfield'].text_field.text())
         self.ui.gui_widgets['video_slider'].setSliderPosition(self.frame_number)
         self.draw_frame()
+
+
+
+
+    # # ---------------
+    # # Funciones Video
+    # # ---------------
+    # def on_backFrame_button_clicked(self):
+    #     # Save current frame
+    #     # if labels: guardar
+
+    #     frame_num = int(self.frame_text.text()) - 1
+    #     if (frame_num >= 0):
+    #         self.frame_text.setText(f'{frame_num}')
+    #         frame_text = self.frame_text.text().zfill(6)
+    #         cv_img = cv2.imread(f'{self.frames_folder}/image_{frame_text}.png')
+    #         qt_img = backend.convert_cv_qt(cv_img)
+    #         self.imagen_label.setPixmap(qt_img)
+    #         self.video_slider.setSliderPosition(int(frame_text))
+
+
+    # def on_backPlay_button_clicked(self):
+    #     self.play_state = True
+    #     while(self.play_state):
+    #         frame_num = int(self.frame_text.text()) - 1
+    #         if (frame_num >= 0):
+    #             self.frame_text.setText(f'{frame_num}')
+    #             frame_text = self.frame_text.text().zfill(6)
+    #             cv_img = cv2.imread(f'{self.frames_folder}/image_{frame_text}.png')
+    #             qt_img = backend.convert_cv_qt(cv_img)
+    #             self.imagen_label.setPixmap(qt_img)
+    #             self.video_slider.setSliderPosition(int(frame_text))
+    #             cv2.waitKey(self.video_timer)
+    #         else:
+    #             self.play_state = False
+
+    
+    # def on_pause_button_clicked(self):
+    #     self.play_state = False
+
+    
+    # def on_play_button_clicked(self):
+    #     self.play_state = True
+    #     while(self.play_state):
+    #         frame_num = int(self.frame_text.text()) + 1
+    #         if (frame_num < self.total_frames):
+    #             self.frame_text.setText(f'{frame_num}')
+    #             frame_text = self.frame_text.text().zfill(6)
+    #             cv_img = cv2.imread(f'{self.frames_folder}/image_{frame_text}.png')
+    #             qt_img = backend.convert_cv_qt(cv_img)
+    #             self.imagen_label.setPixmap(qt_img)
+    #             self.video_slider.setSliderPosition(int(frame_text))
+    #             cv2.waitKey(self.video_timer)
+    #         else:
+    #             self.play_state = False
+            
+
+    # def on_frontFrame_button_clicked(self):
+    #     # Save current frame
+    #     # if labels: guardar
+
+    #     frame_num = int(self.frame_text.text()) + 1
+    #     if (frame_num < self.total_frames):
+    #         self.frame_text.setText(f'{frame_num}')
+    #         frame_text = self.frame_text.text().zfill(6)
+    #         cv_img = cv2.imread(f'{self.frames_folder}/image_{frame_text}.png')
+    #         qt_img = backend.convert_cv_qt(cv_img)
+    #         self.imagen_label.setPixmap(qt_img)
+    #         self.video_slider.setSliderPosition(int(frame_text))
+
+    # def on_video_slider_sliderMoved(self):
+    #     self.frame_text.setText(str(self.video_slider.value()))
+
+
+    # def on_video_slider_sliderReleased(self):
+    #     frame_text = self.frame_text.text().zfill(6)
+    #     cv_img = cv2.imread(f'{self.frames_folder}/image_{frame_text}.png')
+    #     qt_img = backend.convert_cv_qt(cv_img)
+    #     self.imagen_label.setPixmap(qt_img)
+
+
+    # def on_frame_text_returnPressed(self):
+    #     frame_text = self.frame_text.text().zfill(6)
+    #     cv_img = cv2.imread(f'{self.frames_folder}/image_{frame_text}.png')
+    #     qt_img = backend.convert_cv_qt(cv_img)
+    #     self.imagen_label.setPixmap(qt_img)
+    #     self.video_slider.setSliderPosition(int(frame_text))
+
+
+
+
+
+
 
 
     # ---------
