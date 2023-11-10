@@ -23,7 +23,6 @@ from PySide6.QtGui import QRegularExpressionValidator
 import sys
 import pathlib
 
-import material3_components as mt3
 
 
 class NewProject(QtWidgets.QDialog):
