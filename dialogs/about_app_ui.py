@@ -48,7 +48,7 @@ class AboutAppUI(QDialog):
             'position': (8, 8),
             'size': (width-16, height-16),
             'type': 'outlined',
-            'titles': ('Seguidor de Objetos en Video', 'Video Object Tracker'),
+            'titles': ('Anotador de Video', 'Video Annotator'),
             'language': self.language_value } )
 
         self.aboutapp_widgets['version_label'] = MD3Label(self.aboutapp_widgets['aboutapp_dialog_card'], {
