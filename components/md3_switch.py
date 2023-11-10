@@ -1,42 +1,32 @@
 """
 PySide6 Icon Button component adapted to follow Material Design 3 guidelines
 
-
 """
+from PySide6.QtWidgets import QFrame, QToolButton
+from PySide6.QtCore import Qt, QSize
 
-from PySide6 import QtGui, QtWidgets, QtCore
-from PySide6.QtCore import Qt
-
-from components.style_color import colors
-
-import sys
+from icon_color import icon_color
 
 # ------
 # Switch
 # ------
-class MD3Switch(QtWidgets.QToolButton):
+class MD3Switch(QFrame):
     def __init__(self, parent, attributes: dict) -> None:
         """ Material Design 3 Component: Switch
 
         Parameters
         ----------
         attributes: dict
-            name: str
-                Widget name
             position: tuple
-                Switch position
-                (x, y) -> x, y: upper left corner
-            side: str
-                Switch button side
-                'left', 'right'
+                Button top left corner position
+                (x, y)
             state: bool
                 State of activation
                 True: On, False: Off
             enabled: bool
                 Switch enabled / disabled
-            theme: bool
-                App theme
-                True: Light theme, False: Dark theme
+            theme_color: str
+                App theme color name
             clicked: def
                 Switch 'clicked' method name
         
@@ -49,89 +39,44 @@ class MD3Switch(QtWidgets.QToolButton):
         self.attributes = attributes
         self.parent = parent
 
-        self.name = attributes['name']
-        self.setObjectName(self.name)
-
         x, y = attributes['position'] if 'position' in attributes else (0, 0)
-        self.setGeometry(x, y, 26, 32)
+        self.setGeometry(x, y, 52, 32)
 
-        self.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
-        self.setCheckable(True)
-        self.setEnabled(attributes['enabled']) if 'enabled' in attributes else True
+        self.left_switch = QToolButton(self)
+        self.left_switch.setGeometry(0, 0, 26, 32)
+        self.left_switch.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
+        self.left_switch.setCheckable(True)
+        self.left_switch.setEnabled(attributes['enabled']) if 'enabled' in attributes else True
 
-        self.setThemeStyle(attributes['theme'])
-        self.setState(attributes['state'], attributes['theme'])
+        self.right_switch = QToolButton(self)
+        self.right_switch.setGeometry(26, 0, 26, 32)
+        self.right_switch.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
+        self.right_switch.setCheckable(True)
+        self.right_switch.setEnabled(attributes['enabled']) if 'enabled' in attributes else True
 
-        self.clicked.connect(attributes['clicked'])
+        self.left_switch.setProperty('left', True)
+        self.right_switch.setProperty('right', True)
+        self.set_state(attributes['state'], attributes['theme_color'])
+
+        self.left_switch.clicked.connect(attributes['clicked'])
+        self.right_switch.clicked.connect(attributes['clicked'])
         
 
-    def setState(self, state: bool, theme: bool) -> None:
+    def set_state(self, state: bool, color_name: str) -> None:
         """ Set button state and corresponding icon """
-
-        icon_theme = 'L' if theme else 'D'
-        current_path = sys.path[0].replace("\\","/")
-        images_path = f'{current_path}/icons'
-
-        if state:
-            if self.attributes['side'] == 'left':
-                icon_image = 'none'
-            else:
-                icon_image = 'circle_checked'
-        else:
-            if self.attributes['side'] == 'left':
-                icon_image = 'circle'
-            else:
-                icon_image = 'none'
-        self.setChecked(state)
-        self.setIcon(QtGui.QIcon(f'{images_path}/{icon_image}_{icon_theme}.png'))
-        self.setIconSize(QtCore.QSize(16,16))
-
-
-    def setThemeStyle(self, theme: bool) -> None:
-        """ Apply theme style sheet to component """
         
-        if self.parent.attributes['type'] == 'filled':
-            background_color = colors(theme, 'surface_tint')
-        elif self.parent.attributes['type'] == 'outlined':
-            background_color = colors(theme, 'background')
-        border_color = colors(theme, 'outline')
-        
-        checked_background_color = colors(theme, 'secondary')
-        disabled_background_color = colors(theme, 'disable')
-
-        if theme: icon_theme = 'L'
-        else: icon_theme = 'D'
-        current_path = sys.path[0].replace("\\","/")
-        images_path = f'{current_path}/icons'
-        if self.isChecked():
-            if self.attributes['side'] == 'left':
-                icon_image = 'none'
-            else:
-                icon_image = 'circle_checked'
-        else:
-            if self.attributes['side'] == 'left':
-                icon_image = 'circle'
-            else:
-                icon_image = 'none'
-        self.setIcon(QtGui.QIcon(f'{images_path}/{icon_image}_{icon_theme}.png'))
-        self.setIconSize(QtCore.QSize(16,16))
-
-        border_outline = (f'border-top: 2px solid {border_color}; '
-                          f'border-{self.attributes["side"]}: 2px solid {border_color}; '
-                          f'border-bottom: 2px solid {border_color}')
-        border_position = (f'border-top-{self.attributes["side"]}-radius: 16; '
-                           f'border-bottom-{self.attributes["side"]}-radius: 16')
-        
-        self.setStyleSheet(f'QToolButton#{self.name} {{ '
-                f'{border_outline}; '
-                f'{border_position};'
-                f'background-color: {background_color}; '
-                f'}}'
-                f'QToolButton#{self.name}:checked {{ '
-                f'border: 0px solid; '
-                f'{border_position};'
-                f'background-color: {checked_background_color};'
-                f'}}'
-                f'QToolButton#{self.name}:!enabled {{ '
-                f'background-color: {disabled_background_color};'
-                f'}}')
+        self.left_switch.setChecked(state)
+        self.right_switch.setChecked(state)
+        icon_state = {
+            True: { 'left': 'none', 'right': 'circle_checked' },
+            False: { 'left': 'circle', 'right': 'none' }
+        }
+        icon_left_name = icon_state[state]['left']
+        icon_right_name = icon_state[state]['right']
+        color = 'black' if state else color_name
+        colorized_left_icon = icon_color(color, icon_left_name)
+        colorized_right_icon = icon_color(color, icon_right_name)
+        self.left_switch.setIcon(colorized_left_icon)
+        self.right_switch.setIcon(colorized_right_icon)
+        self.left_switch.setIconSize(QSize(16,16))
+        self.right_switch.setIconSize(QSize(16,16))
