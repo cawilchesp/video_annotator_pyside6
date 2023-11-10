@@ -3,8 +3,6 @@ PySide6 Main Window
 
 """
 
-from components.style_color import colors
-
 # ------
 # Window
 # ------
@@ -23,12 +21,15 @@ class MD3Window:
             position: tuple (Optional)
                 Window position, centered by default
                 (x, y) -> x, y: upper left corner
+            minimum_size: tuple
+                minimum window size when resized
+                (minimum_width, minimum_height)
+            maximum_size: tuple
+                maximum window size when resized
+                (maximum_width, maximum_height)
             labels: tuple
-                Window title text
-                (label_es, label_en) -> label_es: label in spanish, label_en: label in english
-            theme: bool
-                App theme
-                True: Light theme, False: Dark theme
+                Window title labels
+                (label_spanish, label_english)
             language: int
                 App language
                 0: Spanish, 1: English
@@ -41,44 +42,23 @@ class MD3Window:
         self.attributes = attributes
 
         w, h = attributes['size'] if 'size' in attributes else (1300, 700)
-        screen_x = int(self.parent.screen().availableGeometry().width() / 2 - (w / 2))
-        screen_y = int(self.parent.screen().availableGeometry().height() / 2 - (h / 2))
-        x, y = attributes['position'] if 'position' in attributes else (screen_x,screen_y)
+        if 'position' in attributes:
+            x, y = attributes['position']
+        else:
+            screen_x = int(self.parent.screen().availableGeometry().width() / 2 - (w / 2))
+            screen_y = int(self.parent.screen().availableGeometry().height() / 2 - (h / 2))
+            x, y = (screen_x, screen_y) 
         self.parent.setGeometry(x, y, w, h)
-
         if 'minimum_size' in attributes:
             w_min, h_min = attributes['minimum_size']
             self.parent.setMinimumSize(w_min, h_min)
-
         if 'maximum_size' in attributes:
             w_max, h_max = attributes['maximum_size']
             self.parent.setMaximumSize(w_max, h_max)
-
-        # self.setThemeStyle(attributes['theme'])
-        self.setLanguage(attributes['language'])
-            
-
-    # def setThemeStyle(self, theme: bool) -> None:
-    #     """ Apply theme style sheet to component """
-        
-    #     background_color = colors(theme, 'background')
-    #     color = colors(theme, 'on_background')
-    #     menu_color = colors(theme, 'on_surface')
-    #     menu_border_color = colors(theme, 'on_background')
-    #     menu_background_color = colors(theme, 'surface')
-
-    #     self.parent.setStyleSheet(f'QWidget {{ '
-    #             f'background-color: {background_color};'
-    #             f'color: {color} }}'
-    #             f'QComboBox QListView {{ '
-    #             f'border: 1px solid {menu_border_color}; '
-    #             f'border-radius: 4;'
-    #             f'background-color: {menu_background_color}; '
-    #             f'color: {menu_color} }}')
+        self.set_language(attributes['language'])
 
 
-    def setLanguage(self, language: int) -> None:
+    def set_language(self, language: int) -> None:
         """ Change language of title text """
-        if 'labels' in self.attributes:
-            if language == 0:   self.parent.setWindowTitle(self.attributes['labels'][0])
-            elif language == 1: self.parent.setWindowTitle(self.attributes['labels'][1])
+        if language == 0:   self.parent.setWindowTitle(self.attributes['labels'][0])
+        elif language == 1: self.parent.setWindowTitle(self.attributes['labels'][1])
