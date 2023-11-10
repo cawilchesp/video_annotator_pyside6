@@ -1,13 +1,13 @@
 """
-Frontend
+Main
 
 This file contains main UI class and methods to control components operations.
 """
 
-from PySide6 import QtGui, QtWidgets, QtCore
-from PySide6.QtWidgets import QWidget, QApplication, QMainWindow
-from PySide6.QtGui import QPixmap, QRegularExpressionValidator
-from PySide6.QtCore import Qt, QSettings, QRegularExpression
+from PySide6 import QtGui, QtWidgets
+from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtCore import QTimer
+from PySide6.QtGui import QPixmap
 
 import sys
 import yaml
@@ -15,11 +15,13 @@ import pathlib
 
 import cv2
 
-import material3_components as mt3
-
 from main_ui import UI
+from dialogs.about_app import AboutApp
 import backend
 import project
+
+# For debugging
+from icecream import ic
 
 
 class MainWindow(QMainWindow):
@@ -34,47 +36,44 @@ class MainWindow(QMainWindow):
             self.config = yaml.safe_load(file)
 
         self.language_value = int(self.config['LANGUAGE'])
-        self.theme_value = self.config['THEME']
+        self.theme_style = self.config['THEME_STYLE']
+        self.theme_color = self.config['THEME_COLOR']
         self.source_folder = self.config['SOURCE_FOLDER']
         self.results_folder = self.config['RESULTS_FOLDER']
-
-        if self.theme_value:
-            theme_file = 'light_theme.qss'
-        else:
-            theme_file = 'dark_theme.qss'
-        
-        with open(theme_file, "r") as theme_qss:
-            self.setStyleSheet(theme_qss.read())
-
-
-
-
-
-
-        self.idioma_dict = {0: ('ESP', 'SPA'), 1: ('ING', 'ENG')}
-        self.regExp1 = QRegularExpressionValidator(QRegularExpression('[0-9]{1,10}'), self)
 
         # ---------
         # Variables
         # ---------
-        self.frames_folder = ''
-        self.labeled_folder = ''
-        self.resized_folder = ''
-        self.video_width = 0
-        self.video_height = 0
-        self.total_frames = 0
-        self.video_fps = 0
-        self.video_timer = 100
-        self.play_state = False
 
-        self.project_info = None
-        self.active_class = ''
-        self.active_color = ''
+        # self.frames_folder = ''
+        # self.labeled_folder = ''
+        # self.resized_folder = ''
+
+        self.cap = None
+        self.video_width = None
+        self.video_height = None
+        self.video_total_frames = None
+        self.video_fps = None
+        self.aspect_ratio = 1.0
+
+        self.timer_play = None
+        self.timer_reverse = None
+
+        self.time_step = 0
+        self.frame_number = 0
+
+        # self.project_info = None
+        # self.active_class = ''
+        # self.active_color = ''
 
         # ---
         # GUI
         # ---
         self.ui = UI(self)
+        theme = 'light' if self.theme_style else 'dark'
+        theme_qss_file = f"themes/{self.theme_color}_{theme}_theme.qss"
+        with open(theme_qss_file, "r") as theme_qss:
+            self.setStyleSheet(theme_qss.read())
 
 
 
@@ -98,31 +97,9 @@ class MainWindow(QMainWindow):
         #     (140, y_1), 'new.png', self.theme_value)
         # self.nuevo_button.clicked.connect(self.on_nuevo_button_clicked)
         
-        # # ----------------
-        # # Card Información
-        # # ----------------
-        # self.info_card = mt3.Card(self, 'info_card',
-        #     (8, 200, 180, 210), ('Información', 'Information'), 
-        #     self.theme_value, self.language_value)
-
-        # y_2 = 48
-        # self.nombre_value = mt3.ValueLabel(self.info_card, 'nombre_value',
-        #     (8, y_2, 164), self.theme_value)
-
-        # y_2 += 30
-        # self.video_icon = mt3.IconLabel(self.info_card, 'video_icon',
-        #     (8, y_2), 'movie', self.theme_value)
-
-        # self.video_value = mt3.ValueLabel(self.info_card, 'video_value',
-        #     (40, y_2, 132), self.theme_value)
         
-        # y_2 += 30
-        # self.size_value = mt3.ValueLabel(self.info_card, 'size_value',
-        #     (40, y_2, 132), self.theme_value)
-        
-        # y_2 += 30
-        # self.frames_value = mt3.ValueLabel(self.info_card, 'frames_value',
-        #     (40, y_2, 132), self.theme_value)
+
+
 
         # # -----------
         # # Card Clases
@@ -263,9 +240,9 @@ class MainWindow(QMainWindow):
         #     self.theme_value, self.language_value)
         
 
-    # ---------------
-    # Title Functions
-    # ---------------
+    # -----------------
+    # Options Functions
+    # -----------------
     def on_language_changed(self, index: int) -> None:
         """ Language menu control to change components text language
         
@@ -279,8 +256,8 @@ class MainWindow(QMainWindow):
         None
         """
         for key in self.ui.gui_widgets.keys():
-            if hasattr(self.ui.gui_widgets[key], 'setLanguage'):
-                self.ui.gui_widgets[key].setLanguage(index)
+            if hasattr(self.ui.gui_widgets[key], 'set_language'):
+                self.ui.gui_widgets[key].set_language(index)
         
         self.language_value = index
         self.config['LANGUAGE'] = index
@@ -288,66 +265,28 @@ class MainWindow(QMainWindow):
             yaml.dump(self.config, file)
 
 
-    def on_light_theme_clicked(self, state: bool) -> None:
-        """ Light theme segmented control to change components stylesheet
-        
-        Parameters
-        ----------
-        state: bool
-            State of light theme segmented control
-        
-        Returns
-        -------
-        None
-        """
-        if state: 
-            # for key in self.ui.gui_widgets.keys():
-            #     self.ui.gui_widgets[key].setThemeStyle(True)
-            with open('light_theme.qss', "r") as theme_qss:
-                self.setStyleSheet(theme_qss.read())
-            self.ui.gui_widgets['dark_theme_button'].setState(False, True)
-
-            # Save settings
-            self.theme_value = True
-            self.config['THEME'] = True
-            with open(self.settings_file, 'w') as file:
-                yaml.dump(self.config, file)
-        
-        self.ui.gui_widgets['light_theme_button'].setState(True, True)
-
-
-    def on_dark_theme_clicked(self, state: bool) -> None:
+    def on_theme_clicked(self) -> None:
         """ Dark theme segmented control to change components stylesheet
         
-        Parameters
-        ----------
-        state: bool
-            State of dark theme segmented control
-        
-        Returns
-        -------
-        None
         """
-        if state: 
-            # for key in self.ui.gui_widgets.keys():
-            #     self.ui.gui_widgets[key].setThemeStyle(False)
-            with open('dark_theme.qss', "r") as theme_qss:
-                self.setStyleSheet(theme_qss.read())
-            self.ui.gui_widgets['light_theme_button'].setState(False, False)
-            
-            # Save settings
-            self.theme_value = False
-            self.config['THEME'] = False
-            with open(self.settings_file, 'w') as file:
-                yaml.dump(self.config, file)
+        state = not self.theme_style
+        theme = 'light' if state else 'dark'
+        theme_qss_file = f"themes/{self.theme_color}_{theme}_theme.qss"
+        with open(theme_qss_file, "r") as theme_qss:
+            self.setStyleSheet(theme_qss.read())
+        self.ui.gui_widgets['theme_button'].set_state(state, self.theme_color)
 
-        self.ui.gui_widgets['dark_theme_button'].setState(True, False)
+        # Save settings
+        self.theme_style = state
+        self.config['THEME_STYLE'] = state
+        with open(self.settings_file, 'w') as file:
+            yaml.dump(self.config, file)
 
 
     def on_about_button_clicked(self) -> None:
         """ About app button to open about app window dialog """
-        self.about = backend.AboutApp()
-        self.about.exec()
+        self.about_app = AboutApp()
+        self.about_app.exec()
 
 
     def resizeEvent(self, a0: QtGui.QResizeEvent) -> None:
@@ -355,19 +294,23 @@ class MainWindow(QMainWindow):
         width = self.geometry().width()
         height = self.geometry().height()
 
-        self.ui.gui_widgets['title_bar_card'].resize(width - 16, 48)
-        self.ui.gui_widgets['language_menu'].move(width - 224, 8)
-        self.ui.gui_widgets['light_theme_button'].move(width - 144, 8)
-        self.ui.gui_widgets['dark_theme_button'].move(width - 104, 8)
-        self.ui.gui_widgets['about_button'].move(width - 56, 8)
+        self.ui.gui_widgets['options_divider'].move(8, height - 49)
+        self.ui.gui_widgets['language_menu'].move(8, height - 40)
+        self.ui.gui_widgets['theme_button'].move(88, height - 40)
+        self.ui.gui_widgets['about_button'].move(128, height - 40)
 
-    #     self.video_card.setGeometry(196, 64, width - 392, 68)
-    #     self.video_card.title.resize(0, 32)
-    #     self.video_slider.setGeometry(288, 22, self.video_card.geometry().width() - 404, 32)
-    #     self.frame_text.setGeometry(self.video_card.geometry().width() - 108, 8, 100, 52)
-        
-    #     self.imagen_card.setGeometry(196, 140, width - 392, height - 148)
-    #     self.imagen_label.setGeometry(8,8, self.imagen_card.geometry().width()-16, self.imagen_card.geometry().height()-16)
+        self.ui.gui_widgets['video_toolbar_card'].resize(width - 204, 68)
+        self.ui.gui_widgets['video_slider'].resize(self.ui.gui_widgets['video_toolbar_card'].width() - 324, 32)
+        self.ui.gui_widgets['frame_value_textfield'].move(self.ui.gui_widgets['video_toolbar_card'].width() - 108, 8)
+
+        self.ui.gui_widgets['video_output_card'].resize(width - 204, height - 92)
+
+        frame_width = (self.ui.gui_widgets['video_output_card'].height() - 56) * self.aspect_ratio
+        frame_height = self.ui.gui_widgets['video_output_card'].height() - 56
+        if frame_width > self.ui.gui_widgets['video_output_card'].width() - 16:
+            frame_width = self.ui.gui_widgets['video_output_card'].width() - 16
+            frame_height = frame_width / self.aspect_ratio
+        self.ui.gui_widgets['video_label'].resize(frame_width, frame_height)
         
     #     self.opciones_card.setGeometry(width - 188, 64, 180, 128)
     #     self.anotaciones_card.setGeometry(width - 188, 200, 180, height - 208)
@@ -441,6 +384,11 @@ class MainWindow(QMainWindow):
                     QtWidgets.QMessageBox.critical(self, 'Creation Error', 'Folder already exists')
 
 
+    def on_source_add_button_clicked(self):
+        return None
+
+
+
     # ----------------
     # Funciones Clases
     # ----------------
@@ -465,100 +413,123 @@ class MainWindow(QMainWindow):
 
 
 
-    # ---------------
-    # Funciones Video
-    # ---------------
-    def on_slow_button_clicked(self):
-        if (self.video_timer + 10 < 1000):
-            self.video_timer += 10
+    # -------------
+    # Video Toolbar
+    # -------------
+    def on_backFrame_button_clicked(self) -> None:
+        if self.timer_play.isActive(): self.timer_play.stop()
+        if self.timer_reverse.isActive(): self.timer_reverse.stop()
+        self.play_backward()
 
 
-    def on_backFrame_button_clicked(self):
-        # Save current frame
-        # if labels: guardar
-
-        frame_num = int(self.frame_text.text()) - 1
-        if (frame_num >= 0):
-            self.frame_text.setText(f'{frame_num}')
-            frame_text = self.frame_text.text().zfill(6)
-            cv_img = cv2.imread(f'{self.frames_folder}/image_{frame_text}.png')
-            qt_img = backend.convert_cv_qt(cv_img)
-            self.imagen_label.setPixmap(qt_img)
-            self.video_slider.setSliderPosition(int(frame_text))
+    def on_reverse_button_clicked(self) -> None:
+        if self.timer_play.isActive(): self.timer_play.stop()
+        self.timer_reverse.start(self.time_step)
 
 
-    def on_backPlay_button_clicked(self):
-        self.play_state = True
-        while(self.play_state):
-            frame_num = int(self.frame_text.text()) - 1
-            if (frame_num >= 0):
-                self.frame_text.setText(f'{frame_num}')
-                frame_text = self.frame_text.text().zfill(6)
-                cv_img = cv2.imread(f'{self.frames_folder}/image_{frame_text}.png')
-                qt_img = backend.convert_cv_qt(cv_img)
-                self.imagen_label.setPixmap(qt_img)
-                self.video_slider.setSliderPosition(int(frame_text))
-                cv2.waitKey(self.video_timer)
-            else:
-                self.play_state = False
-
-    
-    def on_pause_button_clicked(self):
-        self.play_state = False
-
-    
-    def on_play_button_clicked(self):
-        self.play_state = True
-        while(self.play_state):
-            frame_num = int(self.frame_text.text()) + 1
-            if (frame_num < self.total_frames):
-                self.frame_text.setText(f'{frame_num}')
-                frame_text = self.frame_text.text().zfill(6)
-                cv_img = cv2.imread(f'{self.frames_folder}/image_{frame_text}.png')
-                qt_img = backend.convert_cv_qt(cv_img)
-                self.imagen_label.setPixmap(qt_img)
-                self.video_slider.setSliderPosition(int(frame_text))
-                cv2.waitKey(self.video_timer)
-            else:
-                self.play_state = False
-            
-
-    def on_frontFrame_button_clicked(self):
-        # Save current frame
-        # if labels: guardar
-
-        frame_num = int(self.frame_text.text()) + 1
-        if (frame_num < self.total_frames):
-            self.frame_text.setText(f'{frame_num}')
-            frame_text = self.frame_text.text().zfill(6)
-            cv_img = cv2.imread(f'{self.frames_folder}/image_{frame_text}.png')
-            qt_img = backend.convert_cv_qt(cv_img)
-            self.imagen_label.setPixmap(qt_img)
-            self.video_slider.setSliderPosition(int(frame_text))
-
-    
-    def on_fastPlay_button_clicked(self):
-        if (self.video_timer - 10 > 0):
-            self.video_timer -= 10
+    def on_pause_button_clicked(self) -> None:
+        self.timer_play.stop() if self.timer_play.isActive() else self.timer_reverse.stop()
 
 
-    def on_video_slider_sliderMoved(self):
-        self.frame_text.setText(str(self.video_slider.value()))
+    def on_play_button_clicked(self) -> None:
+        if self.timer_reverse.isActive(): self.timer_reverse.stop()
+        self.timer_play.start(self.time_step)
 
 
-    def on_video_slider_sliderReleased(self):
-        frame_text = self.frame_text.text().zfill(6)
-        cv_img = cv2.imread(f'{self.frames_folder}/image_{frame_text}.png')
-        qt_img = backend.convert_cv_qt(cv_img)
-        self.imagen_label.setPixmap(qt_img)
+    def on_frontFrame_button_clicked(self) -> None:
+        if self.timer_play.isActive(): self.timer_play.stop()
+        if self.timer_reverse.isActive(): self.timer_reverse.stop()
+        self.play_forward()
 
 
-    def on_frame_text_returnPressed(self):
-        frame_text = self.frame_text.text().zfill(6)
-        cv_img = cv2.imread(f'{self.frames_folder}/image_{frame_text}.png')
-        qt_img = backend.convert_cv_qt(cv_img)
-        self.imagen_label.setPixmap(qt_img)
-        self.video_slider.setSliderPosition(int(frame_text))
+    def on_video_slider_sliderMoved(self) -> None:
+        self.frame_number = self.ui.gui_widgets['video_slider'].value()
+        self.ui.gui_widgets['frame_value_textfield'].text_field.setText(f"{self.frame_number}")
+        
+
+    def on_video_slider_sliderReleased(self) -> None:
+        self.draw_frame()
+
+
+    def on_frame_value_textfield_returnPressed(self) -> None:
+        self.frame_number = int(self.ui.gui_widgets['frame_value_textfield'].text_field.text())
+        self.ui.gui_widgets['video_slider'].setSliderPosition(self.frame_number)
+        self.draw_frame()
+
+
+    # ---------
+    # Functions
+    # ---------
+    def convert_cv_qt(self, cv_img):
+        """Convert from an opencv image to QPixmap"""
+        rgb_image = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
+        h, w, ch = rgb_image.shape
+        bytes_per_line = ch * w
+        convert_to_qt_format = QtGui.QImage(rgb_image.data, w, h, bytes_per_line, QtGui.QImage.Format.Format_RGB888)
+        return QPixmap.fromImage(convert_to_qt_format)
+
+
+    def draw_frame(self):
+        return None
+        # self.cap.set(cv2.CAP_PROP_POS_FRAMES, self.frame_number)
+        # _, image = self.cap.read()
+        # annotated_image = image.copy()
+        
+        # class_filter = [ value[1] for value in self.class_options.values() if value[0] ]
+        
+        # # Run YOLOv8 inference
+        # results = self.yolov8_model(
+        #     source=image,
+        #     imgsz=640,
+        #     conf=0.5,
+        #     device=0,
+        #     agnostic_nms=True,
+        #     classes=class_filter,
+        #     retina_masks=True,
+        #     verbose=False
+        # )[0]
+
+        # detections = sv.Detections.from_ultralytics(results)
+
+        # tracks = self.byte_tracker.update_with_detections(detections)
+
+        # for track in tracks:
+        #     if track[4] not in self.track_deque:
+        #         self.track_deque[track[4]] = deque(maxlen=64)
+
+        # # Draw labels
+        # labels = [f"{results.names[class_id]} - {tracker_id}" for _, _, _, class_id, tracker_id in tracks]
+
+        # # Draw boxes
+        # annotated_image = box_annotations(annotated_image, tracks, labels)
+
+        # # Draw masks
+        # if detections.mask is not None:
+        #     annotated_image = mask_annotations(annotated_image, detections)
+        
+        # # Draw tracks
+        # annotated_image = track_annotations(annotated_image, tracks, self.track_deque, 'centroid')
+
+        # qt_image = self.convert_cv_qt(annotated_image)
+        # self.ui.gui_widgets['video_label'].setPixmap(qt_image)
+
+
+    def play_forward(self):
+        if (self.frame_number <= self.video_total_frames):
+            self.frame_number += 1
+            self.draw_frame()
+
+            self.ui.gui_widgets['video_slider'].setValue(self.frame_number)
+            self.ui.gui_widgets['frame_value_textfield'].text_field.setText(f"{self.frame_number}")
+
+
+    def play_backward(self):
+        if (self.frame_number > 0):
+            self.frame_number -= 1
+            self.draw_frame()
+
+            self.ui.gui_widgets['video_slider'].setValue(self.frame_number)
+            self.ui.gui_widgets['frame_value_textfield'].text_field.setText(f"{self.frame_number}")
     
 
 if __name__=="__main__":
