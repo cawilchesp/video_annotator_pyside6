@@ -17,8 +17,8 @@ import cv2
 
 from main_ui import UI
 from dialogs.about_app import AboutApp
+from forms.project import NewProject
 import backend
-import project
 
 # For debugging
 from icecream import ic
@@ -222,66 +222,66 @@ class MainWindow(QMainWindow):
     # ------------------
     def on_project_new_button_clicked(self) -> None:
         """ Configure new project """
-        self.new_window = project.NewProject()
+        self.new_window = NewProject()
         self.new_window.exec()
 
-        self.project_info = self.new_window.project_data
+        # self.project_info = self.new_window.project_data
 
-        if self.project_info:
-            # Información del proyecto
-            project_name = self.project_info['project_name']
-            video_file = self.project_info['video_file']
-            results_folder = self.project_info['results_folder']
-            classes = self.project_info['classes']
+        # if self.project_info:
+        #     # Información del proyecto
+        #     project_name = self.project_info['project_name']
+        #     video_file = self.project_info['video_file']
+        #     results_folder = self.project_info['results_folder']
+        #     classes = self.project_info['classes']
 
-            # Creación de la carpeta del proyecto
-            project_folder = pathlib.Path(f'{results_folder}/{project_name}')
-            if not project_folder.exists():
-                project_folder.mkdir()
+        #     # Creación de la carpeta del proyecto
+        #     project_folder = pathlib.Path(f'{results_folder}/{project_name}')
+        #     if not project_folder.exists():
+        #         project_folder.mkdir()
 
-                self.clases_menu.clear()
-                for key, value in classes.items():
-                    self.clases_menu.addItem(key)
-                self.clases_menu.setCurrentIndex(0)
+        #         self.clases_menu.clear()
+        #         for key, value in classes.items():
+        #             self.clases_menu.addItem(key)
+        #         self.clases_menu.setCurrentIndex(0)
 
-                frames_folder = pathlib.Path(f'{results_folder}/{project_name}/frames')
-                frames_folder.mkdir()
-                self.frames_folder = frames_folder
+        #         frames_folder = pathlib.Path(f'{results_folder}/{project_name}/frames')
+        #         frames_folder.mkdir()
+        #         self.frames_folder = frames_folder
 
-                labeled_folder = pathlib.Path(f'{results_folder}/{project_name}/labels')
-                labeled_folder.mkdir()
+        #         labeled_folder = pathlib.Path(f'{results_folder}/{project_name}/labels')
+        #         labeled_folder.mkdir()
 
-                resized_folder = pathlib.Path(f'{results_folder}/{project_name}/resized')
-                resized_folder.mkdir()
+        #         resized_folder = pathlib.Path(f'{results_folder}/{project_name}/resized')
+        #         resized_folder.mkdir()
 
-                # Extracción de información del video
-                video_properties = backend.open_video(video_file)
-                self.video_width = video_properties["width"]
-                self.video_height = video_properties["height"]
-                self.total_frames = video_properties['frame_count']
-                self.video_fps = video_properties['fps']
+        #         # Extracción de información del video
+        #         video_properties = backend.open_video(video_file)
+        #         self.video_width = video_properties["width"]
+        #         self.video_height = video_properties["height"]
+        #         self.total_frames = video_properties['frame_count']
+        #         self.video_fps = video_properties['fps']
 
-                # Presentación de Información
-                self.nombre_value.setText(f'{project_name}')
-                self.video_value.setText(f'{pathlib.Path(video_file).name}')
-                self.size_value.setText(f'{self.video_width} X {self.video_height}')
-                self.frames_value.setText(f'{self.total_frames} frames')
+        #         # Presentación de Información
+        #         self.nombre_value.setText(f'{project_name}')
+        #         self.video_value.setText(f'{pathlib.Path(video_file).name}')
+        #         self.size_value.setText(f'{self.video_width} X {self.video_height}')
+        #         self.frames_value.setText(f'{self.total_frames} frames')
 
-                self.video_slider.setMaximum(self.total_frames)
+        #         self.video_slider.setMaximum(self.total_frames)
 
-                # Extracción de frames del video
-                backend.frame_extraction(video_file, frames_folder, labeled_folder, resized_folder)
+        #         # Extracción de frames del video
+        #         backend.frame_extraction(video_file, frames_folder, labeled_folder, resized_folder)
                 
-                # Presentación del frame 0
-                cv_img = cv2.imread(f'{frames_folder}/image_000000.png')
-                qt_img = backend.convert_cv_qt(cv_img)
-                self.imagen_label.setPixmap(qt_img)
-                self.frame_text.text_field.setText('0')
-            else:
-                if self.language_value == 0:
-                    QtWidgets.QMessageBox.critical(self, 'Error en la creación', 'La carpeta ya existe')
-                elif self.language_value == 1:
-                    QtWidgets.QMessageBox.critical(self, 'Creation Error', 'Folder already exists')
+        #         # Presentación del frame 0
+        #         cv_img = cv2.imread(f'{frames_folder}/image_000000.png')
+        #         qt_img = backend.convert_cv_qt(cv_img)
+        #         self.imagen_label.setPixmap(qt_img)
+        #         self.frame_text.text_field.setText('0')
+        #     else:
+        #         if self.language_value == 0:
+        #             QtWidgets.QMessageBox.critical(self, 'Error en la creación', 'La carpeta ya existe')
+        #         elif self.language_value == 1:
+        #             QtWidgets.QMessageBox.critical(self, 'Creation Error', 'Folder already exists')
 
 
     # ----------------
