@@ -16,12 +16,12 @@ Classes:
     Color of the label for specified class
 """
 
-from PySide6.QtWidgets import QDialog
+from PySide6.QtWidgets import QDialog, QFileDialog
 from PySide6.QtCore import QSettings, QRegularExpression, Qt
 from PySide6.QtGui import QRegularExpressionValidator
 
 import yaml
-import pathlib
+from pathlib import Path
 
 from forms.project_ui import ProjectUI
 
@@ -33,7 +33,8 @@ class NewProject(QDialog):
         # --------
         # Settings
         # --------
-        with open('settings.yaml', 'r') as file:
+        self.settings_file = 'settings.yaml'
+        with open(self.settings_file, 'r') as file:
             self.config = yaml.safe_load(file)
 
         self.language_value = int(self.config['LANGUAGE'])
@@ -84,25 +85,31 @@ class NewProject(QDialog):
     def on_video_button_clicked(self) -> None:
         """ Video file selection dialog to annotate """
         if self.language_value == 0:
-            open_message = 'Seleccione el archivo de video'
-            open_filter = 'Archivos de Video (*.avi *.mp4 *.mpg *.m4v *.mkv)'
+            dialog_message = 'Seleccione el archivo de video'
+            dialog_filter = 'Archivos de Video (*.avi *.mp4 *.mpg *.m4v *.mkv)'
         elif self.language_value == 1:
-            open_message = 'Choose video file'
-            open_filter = 'Video Files (*.avi *.mp4 *.mpg *.m4v *.mkv)'
+            dialog_message = 'Choose video file'
+            dialog_filter = 'Video Files (*.avi *.mp4 *.mpg *.m4v *.mkv)'
 
-        selected_file = QtWidgets.QFileDialog.getOpenFileName(self, open_message, self.video_folder, open_filter)
+        selected_file = QFileDialog.getOpenFileName(self, dialog_message, self.source_folder, dialog_filter)[0]
 
-        if selected_file[0]:
-            file_path = pathlib.Path(selected_file[0])
-            video_path = str(file_path.parent)
-            self.video_text.text_field.setText(f'{selected_file[0]}')
-            self.settings.setValue('video_folder', video_path)
-            self.video_folder = self.settings.value('video_folder')
-        else:
-            if self.language_value == 0:
-                QtWidgets.QMessageBox.critical(self, 'Error en la selección', 'No se seleccionó un archivo de video')
-            elif self.language_value == 1:
-                QtWidgets.QMessageBox.critical(self, 'Selection error', "Video file wasn't chosen")
+        if selected_file:
+            self.source_folder = str(Path(selected_file).parent)
+            self.config['SOURCE_FOLDER'] = self.source_folder
+            with open(self.settings_file, 'w') as file:
+                yaml.dump(self.config, file)
+            self.ui.project_widgets['video_name_textfield'].text_field.setText(selected_file)
+        # else:
+
+        # ***********************************************************
+        # Se podrían hacer mensajes de error, advertencia, y correcto
+        # Con base en los cuadros de Bulma
+        # ***********************************************************
+
+        #     if self.language_value == 0:
+        #         QtWidgets.QMessageBox.critical(self, 'Error en la selección', 'No se seleccionó un archivo de video')
+        #     elif self.language_value == 1:
+        #         QtWidgets.QMessageBox.critical(self, 'Selection error', "Video file wasn't chosen")
 
 
     def on_save_button_clicked(self) -> None:
