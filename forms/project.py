@@ -23,6 +23,7 @@ from PySide6.QtGui import QRegularExpressionValidator
 import yaml
 import pathlib
 
+from forms.project_ui import ProjectUI
 
 
 class NewProject(QDialog):
@@ -51,88 +52,35 @@ class NewProject(QDialog):
         # ----------------
         # Generación de UI
         # ----------------
-        width = 380
-        height = 424
-        screen_x = int(self.screen().availableGeometry().width() / 2 - (width / 2))
-        screen_y = int(self.screen().availableGeometry().height() / 2 - (height / 2))
-
-        if self.language_value == 0:
-            self.setWindowTitle('Nuevo Proyecto')
-        elif self.language_value == 1:
-            self.setWindowTitle('New Project')
-        self.setGeometry(screen_x, screen_y, width, height)
-        self.setMinimumSize(width, height)
-        self.setMaximumSize(width, height + 200)
-        self.setModal(True)
-        self.setObjectName('object_dialog')
-        if self.theme_value:
-            self.setStyleSheet(f'QWidget#object_dialog {{ background-color: #E5E9F0;'
-                f'color: #000000 }}')
-        else:
-            self.setStyleSheet(f'QWidget#object_dialog {{ background-color: #3B4253;'
-                f'color: #E5E9F0 }}')
+        self.ui = ProjectUI(self)
+        theme = 'light' if self.theme_style else 'dark'
+        theme_qss_file = f"themes/{self.theme_color}_{theme}_theme.qss"
+        with open(theme_qss_file, "r") as theme_qss:
+            self.setStyleSheet(theme_qss.read())
 
 
-        self.project_card = mt3.Card(self, 'project_card',
-            (8, 8, width-16, height-16), ('Información del Proyecto', 'Project Information'), 
-            self.theme_value, self.language_value)
-        
-        y, w = 48, width - 32
-        self.name_text = mt3.TextField(self.project_card,
-            (8, y, w), ('Nombre del Proyecto', 'Project Name'), self.theme_value, self.language_value)
-        self.name_text.text_field.setValidator(self.regExp1)
 
-        y += 68
-        self.video_text = mt3.TextField(self.project_card,
-            (8, y, w-40), ('Archivo de Video', 'Video File'), self.theme_value, self.language_value)
+        # self.number_value = mt3.ValueLabel(self.project_card, 'number_value',
+        #     (256, y+14, 98), self.theme_value)
+        # self.number_value.setText('0')
+        # self.number_value.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.video_button = mt3.IconButton(self.project_card, 'video_button',
-            (w-24, y+14), 'video_library.png', self.theme_value)
-        self.video_button.clicked.connect(self.on_video_button_clicked)
+        # y += 68
+        # self.class_value = mt3.ValueLabel(self.project_card, 'class_value',
+        #     (8, y, w), self.theme_value)
+        # self.class_value.setAlignment(Qt.AlignmentFlag.AlignTop)
 
-        y += 68
-        self.save_text = mt3.TextField(self.project_card,
-            (8, y, w-40), ('Carpeta de Resultados', 'Results Folder'), self.theme_value, self.language_value)
-
-        self.save_button = mt3.IconButton(self.project_card, 'save_button',
-            (w-24, y+14), 'results_folder.png', self.theme_value)
-        self.save_button.clicked.connect(self.on_save_button_clicked)
-
-        y += 68
-        self.class_text = mt3.TextField(self.project_card,
-            (8, y, 160), ('Clases', 'Classes'), self.theme_value, self.language_value)
-
-        self.color_button = mt3.ColorButton(self.project_card, 'color_button',
-            (176, y+14), '0,0,0', self.theme_value)
-        self.color_button.clicked.connect(self.on_color_button_clicked)
-
-        self.add_button = mt3.IconButton(self.project_card, 'add_button',
-            (216, y+14), 'new.png', self.theme_value)
-        self.add_button.clicked.connect(self.on_add_button_clicked)
-
-        self.number_value = mt3.ValueLabel(self.project_card, 'number_value',
-            (256, y+14, 98), self.theme_value)
-        self.number_value.setText('0')
-        self.number_value.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        y += 68
-        self.class_value = mt3.ValueLabel(self.project_card, 'class_value',
-            (8, y, w), self.theme_value)
-        self.class_value.setAlignment(Qt.AlignmentFlag.AlignTop)
-
-        y += 48
-        self.aceptar_button = mt3.TextButton(self.project_card, 'aceptar_button',
-            (w-200, y, 100), ('Aceptar', 'Ok'), 'done.png', self.theme_value, self.language_value)
-        self.aceptar_button.clicked.connect(self.on_aceptar_button_clicked)
-
-        self.cancelar_button = mt3.TextButton(self.project_card, 'cancelar_button',
-            (w-92, y, 100), ('Cancelar', 'Cancel'), 'close.png', self.theme_value, self.language_value)
-        self.cancelar_button.clicked.connect(self.on_cancelar_button_clicked)
 
 
     # ---------
     # Funciones
     # ---------
+    def on_textEdited(self):
+        return None
+
+
+
+
     def on_video_button_clicked(self) -> None:
         """ Video file selection dialog to annotate """
         if self.language_value == 0:
@@ -177,14 +125,14 @@ class NewProject(QDialog):
             elif self.language_value == 1:
                 QtWidgets.QMessageBox.critical(self, 'Selection error', "Results folder wasn't chosen")
 
-    def on_color_button_clicked(self) -> None:
+    def on_class_color_button_clicked(self) -> None:
         """ Color dialog button """
         selected_color = QtWidgets.QColorDialog.getColor()
         self.color_value = f'{selected_color.red()}, {selected_color.green()}, {selected_color.blue()}'
         self.color_button.apply_styleSheet(self.theme_value, self.color_value)
 
 
-    def on_add_button_clicked(self) -> None:
+    def on_class_add_button_clicked(self) -> None:
         """ Adding new class and corresponding color """
         if self.class_text.text_field.text() != '':
             if self.color_value != '':
@@ -221,7 +169,7 @@ class NewProject(QDialog):
         self.class_text.text_field.setText('')
 
 
-    def on_aceptar_button_clicked(self) -> None:
+    def on_ok_button_clicked(self) -> None:
         """ Checking and saving form values """
         if (self.name_text.text_field.text() == '' or self.video_text.text_field.text() == '' or 
                 self.save_text.text_field.text() == '' or self.class_value.text() == ''):
@@ -240,6 +188,6 @@ class NewProject(QDialog):
             self.close()
 
 
-    def on_cancelar_button_clicked(self) -> None:
+    def on_cancel_button_clicked(self) -> None:
         """ Close dialog window without saving """
         self.close()
