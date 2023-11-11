@@ -106,23 +106,12 @@ class MainWindow(QMainWindow):
         # self.rectangulo_button = mt3.IconButton(self.formas_card, 'rectangulo_button',
         #     (25, y_4), 'rectangle.png', self.theme_value)
         # self.rectangulo_button.clicked.connect(self.on_rectangulo_button_clicked)
-
-        # self.elipse_button = mt3.IconButton(self.formas_card, 'elipse_button',
-        #     (80, y_4), 'elipse.png', self.theme_value)
         
         # self.poligono_button = mt3.IconButton(self.formas_card, 'poligono_button',
         #     (135, y_4), 'poligono.png', self.theme_value)
-        
-        # y_4 += 40
-        # self.linea_button = mt3.IconButton(self.formas_card, 'linea_button',
-        #     (25, y_4), 'linea.png', self.theme_value)
-        
-        # self.punto_button = mt3.IconButton(self.formas_card, 'punto_button',
-        #     (80, y_4), 'punto.png', self.theme_value)
-        
-        # self.cuboide_button = mt3.IconButton(self.formas_card, 'cuboide_button',
-        #     (135, y_4), 'cuboid.png', self.theme_value)
 
+        # self.prelabelling_button = mt3.IconButton(self.opciones_card, 'tamanoNormal_button',
+        #     (110, y_5), 'zoom_out.png', self.theme_value)
         
         # # -------------
         # # Card Opciones
@@ -131,17 +120,12 @@ class MainWindow(QMainWindow):
         #     (1520, 70, 180, 130), ('Opciones', 'Options'), 
         #     self.theme_value, self.language_value)
         
-        # y_5 = 48
         # self.guardar_button = mt3.IconButton(self.opciones_card, 'guardar_button',
         #     (25, y_5), 'save.png', self.theme_value)
         
         # self.deshacer_button = mt3.IconButton(self.opciones_card, 'deshacer_button',
         #     (80, y_5), 'undo.png', self.theme_value)
         
-        # self.roi_button = mt3.IconButton(self.opciones_card, 'roi_button',
-        #     (135, y_5), 'roi.png', self.theme_value)
-        
-        # y_5 += 40
         # self.aumentar_button = mt3.IconButton(self.opciones_card, 'aumentar_button',
         #     (50, y_5), 'zoom_in.png', self.theme_value)
 
