@@ -85,14 +85,17 @@ class NewProject(QDialog):
 
     def on_video_button_clicked(self) -> None:
         """ Video file selection dialog to annotate """
-        if self.language_value == 0:
-            dialog_message = 'Seleccione el archivo de video'
-            dialog_filter = 'Archivos de Video (*.avi *.mp4 *.mpg *.m4v *.mkv)'
-        elif self.language_value == 1:
-            dialog_message = 'Choose video file'
-            dialog_filter = 'Video Files (*.avi *.mp4 *.mpg *.m4v *.mkv)'
-
-        selected_file = QFileDialog.getOpenFileName(self, dialog_message, self.source_folder, dialog_filter)[0]
+        video_dialog = {
+            'caption': { 0: 'Seleccione el archivo de video',
+                         1: 'Select video file' },
+            'filter': { 0: 'Archivos de Video (*.avi *.mp4 *.mpg *.m4v *.mkv)',
+                        1: 'Video Files (*.avi *.mp4 *.mpg *.m4v *.mkv)' }
+        }
+        selected_file = QFileDialog.getOpenFileName(parent = self,
+            dir = self.source_folder,
+            caption = video_dialog['caption'][self.language_value],
+            filter = video_dialog['filter'][self.language_value]
+        )[0]
 
         if selected_file:
             self.source_folder = str(Path(selected_file).parent)
@@ -101,12 +104,9 @@ class NewProject(QDialog):
                 yaml.dump(self.config, file)
             self.ui.project_widgets['video_name_textfield'].text_field.setText(selected_file)
         else:
-            self.info_app = InfoMessageApp({
-                'size': (300, 100),
+            self.info_app = InfoMessageApp({'size': (300, 100), 'type': 'error',
                 'messages': ("No se seleccionó un archivo de video",
-                             "Video file wasn't selected"),
-                'type': 'error'
-            })
+                             "Video file wasn't selected") })
             self.info_app.exec()
             
 
