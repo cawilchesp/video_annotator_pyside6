@@ -16,7 +16,7 @@ Classes:
     Color of the label for specified class
 """
 
-from PySide6.QtWidgets import QDialog, QFileDialog
+from PySide6.QtWidgets import QDialog, QFileDialog, QColorDialog
 from PySide6.QtCore import QSettings, QRegularExpression, Qt
 from PySide6.QtGui import QRegularExpressionValidator
 
@@ -25,6 +25,9 @@ from pathlib import Path
 
 from forms.project_ui import ProjectUI
 from dialogs.info_message import InfoMessageApp
+
+# For debugging
+from icecream import ic
 
 
 class NewProject(QDialog):
@@ -42,7 +45,7 @@ class NewProject(QDialog):
         self.theme_style = self.config['THEME_STYLE']
         self.theme_color = self.config['THEME_COLOR']
         self.source_folder = self.config['SOURCE_FOLDER']
-        self.results_folder = self.config['RESULTS_FOLDER']
+        self.project_folder = self.config['PROJECT_FOLDER']
 
         # ---------
         # Variables
@@ -112,29 +115,36 @@ class NewProject(QDialog):
 
     def on_save_button_clicked(self) -> None:
         """ Folder selection dialog where annotations are saved """
-        if self.language_value == 0:
-            open_message = 'Seleccione la carpeta de resultados'
-        elif self.language_value == 1:
-            open_message = 'Choose results folder'
-
-        selected_folder = QtWidgets.QFileDialog.getExistingDirectory(self, open_message, self.results_folder)
+        folder_dialog = { 0: 'Seleccione la carpeta del proyecto',
+                          1: 'Select project folder' }
+        selected_folder = QFileDialog.getExistingDirectory(parent = self,
+            caption = folder_dialog[self.language_value],
+            dir = self.project_folder )
         
         if selected_folder:
-            file_path = pathlib.Path(selected_folder)
-            self.save_text.text_field.setText(f'{selected_folder}')
-            self.settings.setValue('results_folder', str(file_path))
-            self.results_folder = self.settings.value('results_folder')
+            self.project_folder = str(Path(selected_folder))
+            self.config['PROJECT_FOLDER'] = self.project_folder
+            with open(self.settings_file, 'w') as file:
+                yaml.dump(self.config, file)
+            self.ui.project_widgets['project_folder_textfield'].text_field.setText(selected_folder)
         else:
-            if self.language_value == 0:
-                QtWidgets.QMessageBox.critical(self, 'Error en la selección', 'No se seleccionó la carpeta de resultados')
-            elif self.language_value == 1:
-                QtWidgets.QMessageBox.critical(self, 'Selection error', "Results folder wasn't chosen")
+            self.info_app = InfoMessageApp({'size': (300, 100), 'type': 'error',
+                'messages': ("No se seleccionó la carpeta del proyecto",
+                             "Project folder wasn't selected") })
+            self.info_app.exec()
+
 
     def on_class_color_button_clicked(self) -> None:
         """ Color dialog button """
-        selected_color = QtWidgets.QColorDialog.getColor()
+        selected_color = QColorDialog.getColor()
+        ic(selected_color)
         self.color_value = f'{selected_color.red()}, {selected_color.green()}, {selected_color.blue()}'
         self.color_button.apply_styleSheet(self.theme_value, self.color_value)
+
+
+
+
+
 
 
     def on_class_add_button_clicked(self) -> None:
@@ -174,6 +184,9 @@ class NewProject(QDialog):
         self.class_text.text_field.setText('')
 
 
+
+
+
     def on_ok_button_clicked(self) -> None:
         """ Checking and saving form values """
         if (self.name_text.text_field.text() == '' or self.video_text.text_field.text() == '' or 
@@ -191,6 +204,9 @@ class NewProject(QDialog):
                 'classes': self.classes_values
             }
             self.close()
+
+
+
 
 
     def on_cancel_button_clicked(self) -> None:
