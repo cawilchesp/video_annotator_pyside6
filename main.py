@@ -40,7 +40,7 @@ class MainWindow(QMainWindow):
         self.theme_style = self.config['THEME_STYLE']
         self.theme_color = self.config['THEME_COLOR']
         self.source_folder = self.config['SOURCE_FOLDER']
-        self.results_folder = self.config['RESULTS_FOLDER']
+        self.project_folder = self.config['PROJECT_FOLDER']
 
         # ---------
         # Variables
