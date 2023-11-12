@@ -32,7 +32,7 @@ class ProjectUI(QDialog):
         self.theme_style = self.config['THEME_STYLE']
         self.theme_color = self.config['THEME_COLOR']
         self.source_folder = self.config['SOURCE_FOLDER']
-        self.results_folder = self.config['RESULTS_FOLDER']
+        self.project_folder = self.config['PROJECT_FOLDER']
 
         # ---------
         # Variables
@@ -84,15 +84,15 @@ class ProjectUI(QDialog):
             'theme_color': self.theme_color,
             'clicked': parent.on_video_button_clicked } )
         
-        self.project_widgets['results_folder_textfield'] = MD3TextField(self.project_widgets['project_card'], {
+        self.project_widgets['project_folder_textfield'] = MD3TextField(self.project_widgets['project_card'], {
             'position': (8, 168),
             'width': width - 72,
             'type': 'outlined',
-            'labels': ('Carpeta de Resultados', 'Results Folder'),
+            'labels': ('Carpeta del Proyecto', 'Project Folder'),
             'language': self.language_value,
             'text_edited': parent.on_textEdited } )
 
-        self.project_widgets['results_folder_button'] = MD3Button(self.project_widgets['project_card'], {
+        self.project_widgets['project_folder_button'] = MD3Button(self.project_widgets['project_card'], {
             'position': (width - 56, 182),
             'type': 'filled',
             'icon': 'results_folder',
