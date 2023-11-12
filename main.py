@@ -17,6 +17,7 @@ import cv2
 
 from main_ui import UI
 from dialogs.about_app import AboutApp
+from dialogs.info_message import InfoMessageApp
 from forms.project import NewProject
 import backend
 
