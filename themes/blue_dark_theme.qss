@@ -354,3 +354,76 @@ MD3ImageLabel {
     border: 1px solid hsl(204, 86%, 53%);
     background-color: transparent
 }
+
+/* Info Message Dialog */
+InfoMessageApp QLabel#dialog_title {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    padding: 8
+}
+
+InfoMessageApp QLabel#dialog_message {
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    padding: 8
+}
+
+InfoMessageApp QPushButton {
+    border-style: solid;
+    border-width: 0px;
+    border-radius: 10
+}
+
+InfoMessageApp[error=true] QLabel#dialog_title {
+    background-color: hsl(348, 86%, 61%);
+    color: hsl(348, 86%, 96%)
+}
+
+InfoMessageApp[error=true] QLabel#dialog_message {
+    background-color: hsl(348, 86%, 96%);
+    color: hsl(348, 86%, 43%)
+}
+
+InfoMessageApp[error=true] QPushButton {
+    background-color: hsl(348, 86%, 43%);
+}
+
+InfoMessageApp[error=true] QPushButton:hover {
+    background-color: hsl(348, 86%, 28%);
+}
+
+InfoMessageApp[warning=true] QLabel#dialog_title {
+    background-color: hsl(44, 100%, 77%);
+    color: hsl(44, 100%, 32%)
+}
+
+InfoMessageApp[warning=true] QLabel#dialog_message {
+    background-color: hsl(44, 100%, 96%);
+    color: hsl(44, 100%, 32%)
+}
+
+InfoMessageApp[warning=true] QPushButton {
+    background-color: hsl(44, 100%, 32%);
+}
+
+InfoMessageApp[warning=true] QPushButton:hover {
+    background-color: hsl(44, 100%, 20%);
+}
+
+InfoMessageApp[success=true] QLabel#dialog_title {
+    background-color: hsl(153, 53%, 53%);
+    color: hsl(153, 53%, 96%)
+}
+
+InfoMessageApp[success=true] QLabel#dialog_message {
+    background-color: hsl(153, 53%, 96%);
+    color: hsl(153, 53%, 31%)
+}
+
+InfoMessageApp[success=true] QPushButton {
+    background-color: hsl(153, 53%, 31%);
+}
+
+InfoMessageApp[success=true] QPushButton:hover {
+    background-color: hsl(153, 53%, 20%);
+}
