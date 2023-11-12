@@ -24,6 +24,7 @@ import yaml
 from pathlib import Path
 
 from forms.project_ui import ProjectUI
+from dialogs.info_message import InfoMessageApp
 
 
 class NewProject(QDialog):
@@ -99,18 +100,15 @@ class NewProject(QDialog):
             with open(self.settings_file, 'w') as file:
                 yaml.dump(self.config, file)
             self.ui.project_widgets['video_name_textfield'].text_field.setText(selected_file)
-        # else:
-
-        # ***********************************************************
-        # Se podrían hacer mensajes de error, advertencia, y correcto
-        # Con base en los cuadros de Bulma
-        # ***********************************************************
-
-        #     if self.language_value == 0:
-        #         QtWidgets.QMessageBox.critical(self, 'Error en la selección', 'No se seleccionó un archivo de video')
-        #     elif self.language_value == 1:
-        #         QtWidgets.QMessageBox.critical(self, 'Selection error', "Video file wasn't chosen")
-
+        else:
+            self.info_app = InfoMessageApp({
+                'size': (300, 100),
+                'messages': ("No se seleccionó un archivo de video",
+                             "Video file wasn't selected"),
+                'type': 'error'
+            })
+            self.info_app.exec()
+            
 
     def on_save_button_clicked(self) -> None:
         """ Folder selection dialog where annotations are saved """
