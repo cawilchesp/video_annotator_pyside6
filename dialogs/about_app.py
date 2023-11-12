@@ -1,4 +1,5 @@
 from PySide6.QtWidgets import QDialog
+from PySide6.QtCore import Qt
 
 from dialogs.about_app_ui import AboutAppUI
 
@@ -25,6 +26,7 @@ class AboutApp(QDialog):
         # ---
         # GUI
         # ---
+        self.setWindowFlags(Qt.FramelessWindowHint)
         self.ui = AboutAppUI(self)
         theme = 'light' if self.theme_style else 'dark'
         theme_qss_file = f"themes/{self.theme_color}_{theme}_theme.qss"
