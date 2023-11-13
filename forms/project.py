@@ -136,10 +136,8 @@ class NewProject(QDialog):
 
     def on_class_color_button_clicked(self) -> None:
         """ Color dialog button """
-        selected_color = QColorDialog.getColor()
-        ic(selected_color)
-        self.color_value = f'{selected_color.red()}, {selected_color.green()}, {selected_color.blue()}'
-        self.color_button.apply_styleSheet(self.theme_value, self.color_value)
+        self.color_value = QColorDialog.getColor().name()
+        self.ui.project_widgets['class_color_label'].set_color_label(self.color_value)
 
 
 
