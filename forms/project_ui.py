@@ -42,12 +42,11 @@ class ProjectUI(QDialog):
         # -----------
         # Main Window
         # -----------
-        (width, height) = (380, 424)
+        (width, height) = (380, 344)
         self.project_widgets['main_window'] = MD3Window( {
             'parent': parent,
             'size': (width, height),
             'minimum_size': (width, height),
-            'maximum_size': (width, height + 200),
             'labels': ('Nuevo Proyecto', 'New Project'),
             'language': self.language_value } )
 
@@ -125,10 +124,6 @@ class ProjectUI(QDialog):
             'icon': 'new',
             'theme_color': self.theme_color,
             'clicked': parent.on_class_add_button_clicked } )
-
-
-
-
 
         # ---------------------
         # Buttons Ok and Cancel
