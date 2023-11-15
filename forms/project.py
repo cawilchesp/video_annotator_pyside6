@@ -183,7 +183,7 @@ class NewProject(QDialog):
             self.new_class_label_y += 40
             self.new_color_label_y += 40
             
-            self.ui.project_widgets['class_textfield'].text_field.setText()
+            self.ui.project_widgets['class_textfield'].text_field.setText('')
             
 
 
