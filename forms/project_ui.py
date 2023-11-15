@@ -1,4 +1,5 @@
-from PySide6.QtWidgets import QDialog
+from PySide6.QtWidgets import QDialog, QTableWidget, QTableWidgetItem
+from PySide6.QtGui import QColor
 
 from components.md3_button import MD3Button
 from components.md3_card import MD3Card
@@ -33,7 +34,7 @@ class ProjectUI(QDialog):
         # -----------
         # Main Window
         # -----------
-        (width, height) = (380, 344)
+        (width, height) = (380, 392)
         self.project_widgets['main_window'] = MD3Window( {
             'parent': parent,
             'size': (width, height),
@@ -115,6 +116,16 @@ class ProjectUI(QDialog):
             'icon': 'new',
             'theme_color': self.theme_color,
             'clicked': parent.on_class_add_button_clicked } )
+        
+        self.project_widgets['new_class_table'] = QTableWidget(self.project_widgets['project_card'])
+        self.project_widgets['new_class_table'].setGeometry(8, 288, width - 32, 40)
+        self.project_widgets['new_class_table'].setColumnCount(2)
+        self.project_widgets['new_class_table'].setRowCount(1)
+        self.project_widgets['new_class_table'].horizontalHeader().hide()
+        self.project_widgets['new_class_table'].verticalHeader().hide()
+        self.project_widgets['new_class_table'].setRowHeight(0, 40)
+        self.project_widgets['new_class_table'].setItem(0, 0, QTableWidgetItem('row'))
+        self.project_widgets['new_class_table'].item(0,0).setBackground(QColor(255,255,255))
 
         # ---------------------
         # Buttons Ok and Cancel
