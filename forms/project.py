@@ -69,18 +69,9 @@ class NewProject(QDialog):
         with open(theme_qss_file, "r") as theme_qss:
             self.setStyleSheet(theme_qss.read())
 
-
-
-        # self.number_value = mt3.ValueLabel(self.project_card, 'number_value',
-        #     (256, y+14, 98), self.theme_value)
-        # self.number_value.setText('0')
-        # self.number_value.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        # y += 68
         # self.class_value = mt3.ValueLabel(self.project_card, 'class_value',
         #     (8, y, w), self.theme_value)
         # self.class_value.setAlignment(Qt.AlignmentFlag.AlignTop)
-
 
 
     # ---------
@@ -88,8 +79,6 @@ class NewProject(QDialog):
     # ---------
     def on_textEdited(self):
         return None
-
-
 
 
     def on_video_button_clicked(self) -> None:
@@ -213,7 +202,6 @@ class NewProject(QDialog):
 
 
 
-
     def on_ok_button_clicked(self) -> None:
         """ Checking and saving form values """
         if (self.name_text.text_field.text() == '' or self.video_text.text_field.text() == '' or 
@@ -231,9 +219,6 @@ class NewProject(QDialog):
                 'classes': self.classes_values
             }
             self.close()
-
-
-
 
 
     def on_cancel_button_clicked(self) -> None:
