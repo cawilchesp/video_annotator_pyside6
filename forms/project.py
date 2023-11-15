@@ -150,38 +150,40 @@ class NewProject(QDialog):
         """ Adding new class and corresponding color """
         class_name = self.ui.project_widgets['class_textfield'].text_field.text()
         if class_name != '' and class_name not in self.classes_values:
-                if self.color_value != '':
-                    self.classes_values[self.ui.project_widgets['class_textfield'].text_field.text()] = self.color_value
-                else:
-                    self.classes_values[self.ui.project_widgets['class_textfield'].text_field.text()] = '#000000'
+            if self.color_value != '':
+                self.classes_values[self.ui.project_widgets['class_textfield'].text_field.text()] = self.color_value
+            else:
+                self.classes_values[self.ui.project_widgets['class_textfield'].text_field.text()] = '#000000'
 
-                window_width = self.geometry().width()
-                window_height = self.geometry().height()
-                self.resize(window_width, window_height + 40)
-                self.ui.project_widgets['project_card'].resize(window_width - 16, window_height - 16 + 40)
-                self.ui.project_widgets['cancel_button'].move(window_width - 232, window_height - 56 + 40)
-                self.ui.project_widgets['ok_button'].move(window_width - 124, window_height - 56 + 40)
+            window_width = self.geometry().width()
+            window_height = self.geometry().height()
+            self.resize(window_width, window_height + 40)
+            self.ui.project_widgets['project_card'].resize(window_width - 16, window_height - 16 + 40)
+            self.ui.project_widgets['cancel_button'].move(window_width - 232, window_height - 56 + 40)
+            self.ui.project_widgets['ok_button'].move(window_width - 124, window_height - 56 + 40)
 
-                self.class_count += 1
-                new_class_label_name = f"class_{self.class_count}"
-                
-                self.ui.project_widgets[new_class_label_name] = MD3Label(self.ui.project_widgets['project_card'], {
-                    'position': (8, self.new_class_label_y), 
-                    'width': 100,
-                    'type': 'subtitle',
-                    'align': 'left',
-                    'labels': (class_name, class_name),
-                    'language': self.language_value } )
-                
-                new_color_label_name = f"class_color_{self.class_count}"
-                self.ui.project_widgets[new_color_label_name] = MD3Label(self.ui.project_widgets['project_card'], {
-                    'position': (108, self.new_color_label_y),
-                    'type': 'color',
-                    'color': self.color_value,
-                    'theme_color': self.theme_color } )
-                
-                self.new_class_label_y += 40
-                self.new_color_label_y += 40
+            self.class_count += 1
+            new_class_label_name = f"class_{self.class_count}"
+            
+            self.ui.project_widgets[new_class_label_name] = MD3Label(self.ui.project_widgets['project_card'], {
+                'position': (8, self.new_class_label_y), 
+                'width': 100,
+                'type': 'subtitle',
+                'align': 'left',
+                'labels': (class_name, class_name),
+                'language': self.language_value } )
+            
+            new_color_label_name = f"class_color_{self.class_count}"
+            self.ui.project_widgets[new_color_label_name] = MD3Label(self.ui.project_widgets['project_card'], {
+                'position': (108, self.new_color_label_y),
+                'type': 'color',
+                'color': self.color_value,
+                'theme_color': self.theme_color } )
+            
+            self.new_class_label_y += 40
+            self.new_color_label_y += 40
+            
+            self.ui.project_widgets['class_textfield'].text_field.setText()
             
 
 
@@ -205,11 +207,6 @@ class NewProject(QDialog):
 
         #         self.aceptar_button.setGeometry(w_window-232, 336+(cnt*16), 100, 32)
         #         self.cancelar_button.setGeometry(w_window-124, 336+(cnt*16), 100, 32)
-        # else:
-        #     if self.language_value == 0:
-        #         QtWidgets.QMessageBox.critical(self, 'Error en la clase', 'No se le dio nombre a la clase')
-        #     elif self.language_value == 1:
-        #         QtWidgets.QMessageBox.critical(self, 'Class error', 'Class name is missing')
 
         # self.class_text.text_field.setText('')
 
