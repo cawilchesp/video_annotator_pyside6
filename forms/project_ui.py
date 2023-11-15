@@ -2,16 +2,7 @@ from PySide6.QtWidgets import QDialog
 
 from components.md3_button import MD3Button
 from components.md3_card import MD3Card
-from components.md3_chip import MD3Chip
-from components.md3_datepicker import MD3DatePicker
-from components.md3_divider import MD3Divider
-from components.md3_imagelabel import MD3ImageLabel
 from components.md3_label import MD3Label
-from components.md3_menu import MD3Menu
-from components.md3_segmentedbutton import MD3SegmentedButton
-from components.md3_themebutton import MD3ThemeButton
-from components.md3_slider import MD3Slider
-from components.md3_switch import MD3Switch
 from components.md3_textfield import MD3TextField
 from components.md3_window import MD3Window
 
