@@ -174,7 +174,7 @@ class NewProject(QDialog):
             
             self.ui.project_widgets['class_textfield'].text_field.setText('')
             
-
+            self.update()
 
         #     self.class_value.clear()
         #     for key, value in self.classes_values.items():
