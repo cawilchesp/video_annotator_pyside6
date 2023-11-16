@@ -163,32 +163,6 @@ class NewProject(QDialog):
             self.ui.project_widgets['class_textfield'].text_field.setText('')
             
 
-        #     self.class_value.clear()
-        #     for key, value in self.classes_values.items():
-        #         c = self.class_value.text()
-        #         self.class_value.setText(f'{c}{key}: {value}\n')
-            
-        #     x_window = self.geometry().x()
-        #     y_window = self.geometry().y()
-        #     w_window = self.geometry().width()
-
-        #     cnt = len(self.classes_values)
-        #     self.number_value.setText(f'{cnt}')
-
-        #     if cnt > 2:
-        #         self.setGeometry(x_window, y_window, w_window, 392+(cnt*16))
-        #         self.project_card.setGeometry(8, 8, w_window-16, 376+(cnt*16))
-                
-        #         self.class_value.setGeometry(8, 320, w_window-32, cnt*16)
-
-        #         self.aceptar_button.setGeometry(w_window-232, 336+(cnt*16), 100, 32)
-        #         self.cancelar_button.setGeometry(w_window-124, 336+(cnt*16), 100, 32)
-
-        # self.class_text.text_field.setText('')
-
-
-
-
     def on_ok_button_clicked(self) -> None:
         """ Checking and saving form values """
         if (self.name_text.text_field.text() == '' or self.video_text.text_field.text() == '' or 
