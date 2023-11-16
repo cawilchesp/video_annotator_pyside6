@@ -6,6 +6,7 @@ from components.md3_button import MD3Button
 from components.md3_card import MD3Card
 from components.md3_label import MD3Label
 from components.md3_textfield import MD3TextField
+from components.md3_table import MD3Table
 from components.md3_window import MD3Window
 
 import yaml
@@ -118,15 +119,14 @@ class ProjectUI(QDialog):
             'theme_color': self.theme_color,
             'clicked': parent.on_class_add_button_clicked } )
         
-        self.project_widgets['new_class_table'] = QTableWidget(self.project_widgets['project_card'])
-        self.project_widgets['new_class_table'].setGeometry(8, 288, width - 32, 40)
-        self.project_widgets['new_class_table'].setColumnCount(2)
-        self.project_widgets['new_class_table'].setRowCount(1)
-        self.project_widgets['new_class_table'].horizontalHeader().hide()
-        self.project_widgets['new_class_table'].verticalHeader().hide()
-        self.project_widgets['new_class_table'].setRowHeight(0, 40)
-        self.project_widgets['new_class_table'].setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        
+        self.project_widgets['new_class_table'] = MD3Table(self.project_widgets['project_card'], {
+            'position': (8, 288),
+            'width': width - 32,
+            'columns': 2,
+            'rows': 1,
+            'header': False,
+            'scrollbar': False } )
+
         # ---------------------
         # Buttons Ok and Cancel
         # ---------------------
