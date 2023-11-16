@@ -1,5 +1,6 @@
-from PySide6.QtWidgets import QDialog, QTableWidget, QTableWidgetItem
+from PySide6.QtWidgets import QDialog, QTableWidget
 from PySide6.QtGui import QColor
+from PySide6.QtCore import Qt
 
 from components.md3_button import MD3Button
 from components.md3_card import MD3Card
@@ -124,9 +125,8 @@ class ProjectUI(QDialog):
         self.project_widgets['new_class_table'].horizontalHeader().hide()
         self.project_widgets['new_class_table'].verticalHeader().hide()
         self.project_widgets['new_class_table'].setRowHeight(0, 40)
-        self.project_widgets['new_class_table'].setItem(0, 0, QTableWidgetItem('row'))
-        self.project_widgets['new_class_table'].item(0,0).setBackground(QColor(255,255,255))
-
+        self.project_widgets['new_class_table'].setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        
         # ---------------------
         # Buttons Ok and Cancel
         # ---------------------
