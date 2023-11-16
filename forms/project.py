@@ -16,9 +16,9 @@ Classes:
     Color of the label for specified class
 """
 
-from PySide6.QtWidgets import QDialog, QFileDialog, QColorDialog
+from PySide6.QtWidgets import QDialog, QFileDialog, QColorDialog, QTableWidgetItem
+from PySide6.QtGui import QColor
 from PySide6.QtCore import QSettings, QRegularExpression, Qt
-from PySide6.QtGui import QRegularExpressionValidator
 
 from components.md3_label import MD3Label
 
@@ -57,8 +57,7 @@ class NewProject(QDialog):
         self.color_value = ''
 
         self.class_count = 0
-        self.new_class_label_y = 296
-        self.new_color_label_y = 288
+        self.new_class_table_size = 0
 
         # ----------------
         # Generación de UI
@@ -147,34 +146,22 @@ class NewProject(QDialog):
             window_width = self.geometry().width()
             window_height = self.geometry().height()
             self.resize(window_width, window_height + 40)
+            self.class_count += 1
+            self.new_class_table_size += 40
+
             self.ui.project_widgets['project_card'].resize(window_width - 16, window_height - 16 + 40)
             self.ui.project_widgets['cancel_button'].move(window_width - 232, window_height - 56 + 40)
             self.ui.project_widgets['ok_button'].move(window_width - 124, window_height - 56 + 40)
+            self.ui.project_widgets['new_class_table'].resize(window_width - 32, self.new_class_table_size)
+            self.ui.project_widgets['new_class_table'].setRowCount(self.class_count + 1)
+            self.ui.project_widgets['new_class_table'].setRowHeight(self.class_count, 40)
+            self.ui.project_widgets['new_class_table'].setItem(self.class_count - 1, 0, QTableWidgetItem(class_name))
+            self.ui.project_widgets['new_class_table'].item(self.class_count - 1, 0).setBackground(QColor(0, 0, 0, 0))
+            self.ui.project_widgets['new_class_table'].setItem(self.class_count - 1, 1, QTableWidgetItem(''))
+            self.ui.project_widgets['new_class_table'].item(self.class_count - 1, 1).setBackground(QColor(self.color_value))
 
-            self.class_count += 1
-            new_class_label_name = f"class_{self.class_count}"
-            
-            self.ui.project_widgets[new_class_label_name] = MD3Label(self.ui.project_widgets['project_card'], {
-                'position': (8, self.new_class_label_y), 
-                'width': 100,
-                'type': 'subtitle',
-                'align': 'left',
-                'labels': (class_name, class_name),
-                'language': self.language_value } )
-            
-            new_color_label_name = f"class_color_{self.class_count}"
-            self.ui.project_widgets[new_color_label_name] = MD3Label(self.ui.project_widgets['project_card'], {
-                'position': (108, self.new_color_label_y),
-                'type': 'color',
-                'color': self.color_value,
-                'theme_color': self.theme_color } )
-            
-            self.new_class_label_y += 40
-            self.new_color_label_y += 40
-            
             self.ui.project_widgets['class_textfield'].text_field.setText('')
             
-            self.update()
 
         #     self.class_value.clear()
         #     for key, value in self.classes_values.items():
