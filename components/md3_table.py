@@ -49,7 +49,7 @@ class MD3Table(QTableWidget):
 
         x, y = attributes['position'] if 'position' in attributes else (8,8)
         w = attributes['width'] if 'width' in attributes else 32
-        self.setGeometry(x, y, w, 32)
+        self.setGeometry(x, y, w, 40)
 
         self.setColumnCount(attributes['columns'])
         self.setRowCount(attributes['rows'])
@@ -59,4 +59,5 @@ class MD3Table(QTableWidget):
         self.setRowHeight(0, 40)
         if not attributes['scrollbar']:
             self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+            self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         
