@@ -121,7 +121,7 @@ class ProjectUI(QDialog):
         
         self.project_widgets['new_class_table'] = MD3Table(self.project_widgets['project_card'], {
             'position': (8, 288),
-            'width': width - 32,
+            'width': 200,
             'columns': 2,
             'rows': 1,
             'header': False,
