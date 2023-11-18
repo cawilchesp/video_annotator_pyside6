@@ -152,7 +152,7 @@ class NewProject(QDialog):
             self.ui.project_widgets['project_card'].resize(window_width - 16, window_height - 16 + 40)
             self.ui.project_widgets['cancel_button'].move(window_width - 232, window_height - 56 + 40)
             self.ui.project_widgets['ok_button'].move(window_width - 124, window_height - 56 + 40)
-            self.ui.project_widgets['new_class_table'].resize(window_width - 32, self.new_class_table_size)
+            self.ui.project_widgets['new_class_table'].resize(self.ui.project_widgets['new_class_table'].width(), self.new_class_table_size)
             self.ui.project_widgets['new_class_table'].setRowCount(self.class_count + 1)
             self.ui.project_widgets['new_class_table'].setRowHeight(self.class_count, 40)
             self.ui.project_widgets['new_class_table'].setItem(self.class_count - 1, 0, QTableWidgetItem(class_name))
