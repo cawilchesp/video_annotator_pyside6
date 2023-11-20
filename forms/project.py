@@ -57,7 +57,6 @@ class NewProject(QDialog):
         self.color_value = ''
 
         self.class_count = 0
-        self.new_class_table_size = 0
 
         # ----------------
         # Generación de UI
@@ -143,43 +142,46 @@ class NewProject(QDialog):
             else:
                 self.classes_values[self.ui.project_widgets['class_textfield'].text_field.text()] = '#000000'
 
-            window_width = self.geometry().width()
-            window_height = self.geometry().height()
-            self.resize(window_width, window_height + 40)
             self.class_count += 1
-            self.new_class_table_size += 40
-
-            self.ui.project_widgets['project_card'].resize(window_width - 16, window_height - 16 + 40)
-            self.ui.project_widgets['cancel_button'].move(window_width - 232, window_height - 56 + 40)
-            self.ui.project_widgets['ok_button'].move(window_width - 124, window_height - 56 + 40)
-            self.ui.project_widgets['new_class_table'].resize(self.ui.project_widgets['new_class_table'].width(), self.new_class_table_size)
-            self.ui.project_widgets['new_class_table'].setRowCount(self.class_count + 1)
-            self.ui.project_widgets['new_class_table'].setRowHeight(self.class_count, 40)
-            self.ui.project_widgets['new_class_table'].setItem(self.class_count - 1, 0, QTableWidgetItem(class_name))
-            self.ui.project_widgets['new_class_table'].item(self.class_count - 1, 0).setBackground(QColor(0, 0, 0, 0))
+            if self.class_count > 1:
+                window_width = self.geometry().width()
+                window_height = self.geometry().height()
+                self.resize(window_width, window_height + 40)
+                self.ui.project_widgets['project_card'].resize(window_width - 16, window_height - 16 + 40)
+                self.ui.project_widgets['cancel_button'].move(window_width - 232, window_height - 56 + 40)
+                self.ui.project_widgets['ok_button'].move(window_width - 124, window_height - 56 + 40)
+                self.ui.project_widgets['new_class_table'].resize(self.ui.project_widgets['new_class_table'].width(), self.ui.project_widgets['new_class_table'].height() + 40)
+            
+            self.ui.project_widgets['new_class_table'].setRowCount(self.class_count)
+            self.ui.project_widgets['new_class_table'].setRowHeight(self.class_count - 1, 40)
+            class_item = QTableWidgetItem(class_name)
+            class_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+            class_item.setBackground(QColor(0, 0, 0, 0))
+            self.ui.project_widgets['new_class_table'].setItem(self.class_count - 1, 0, class_item)
             self.ui.project_widgets['new_class_table'].setItem(self.class_count - 1, 1, QTableWidgetItem(''))
             self.ui.project_widgets['new_class_table'].item(self.class_count - 1, 1).setBackground(QColor(self.color_value))
-
+            
             self.ui.project_widgets['class_textfield'].text_field.setText('')
             
 
     def on_ok_button_clicked(self) -> None:
         """ Checking and saving form values """
-        if (self.name_text.text_field.text() == '' or self.video_text.text_field.text() == '' or 
-                self.save_text.text_field.text() == '' or self.class_value.text() == ''):
+        print(self.classes_values)
+        # if (self.name_text.text_field.text() == '' or self.video_text.text_field.text() == '' or 
+        #         self.save_text.text_field.text() == '' or self.class_value.text() == ''):
 
-            if self.language_value == 0:
-                QtWidgets.QMessageBox.critical(self, 'Error en el Formulario', 'Hacen falta datos del proyecto')
-            elif self.language_value == 1:
-                QtWidgets.QMessageBox.critical(self, 'Form Error', 'Project data is missing')
-        else:
-            self.project_data = {
-                'project_name': self.name_text.text_field.text(),
-                'video_file': self.video_text.text_field.text(),
-                'results_folder': self.save_text.text_field.text(),
-                'classes': self.classes_values
-            }
-            self.close()
+        #     if self.language_value == 0:
+        #         QtWidgets.QMessageBox.critical(self, 'Error en el Formulario', 'Hacen falta datos del proyecto')
+        #     elif self.language_value == 1:
+        #         QtWidgets.QMessageBox.critical(self, 'Form Error', 'Project data is missing')
+        # else:
+        #     self.project_data = {
+        #         'project_name': self.name_text.text_field.text(),
+        #         'video_file': self.video_text.text_field.text(),
+        #         'results_folder': self.save_text.text_field.text(),
+        #         'classes': self.classes_values
+        #     }
+        #     self.close()
 
 
     def on_cancel_button_clicked(self) -> None:
