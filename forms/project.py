@@ -18,10 +18,7 @@ Classes:
 
 from PySide6.QtWidgets import QDialog, QFileDialog, QColorDialog, QTableWidgetItem
 from PySide6.QtGui import QColor
-from PySide6.QtCore import QSettings, QRegularExpression, Qt
-
-from components.md3_label import MD3Label
-from components.md3_textfield import MD3TextField
+from PySide6.QtCore import Qt
 
 import yaml
 from pathlib import Path
@@ -62,7 +59,8 @@ class NewProject(QDialog):
         self.form_fill_state = {
             'project_name_textfield': False,
             'video_name_textfield': False,
-            'project_folder_textfield': False
+            'project_folder_textfield': False,
+            'frame_extraction_textfield': False
         }
 
         # ----------------
@@ -175,6 +173,7 @@ class NewProject(QDialog):
             'project_name': self.ui.project_widgets['project_name_textfield'].text_field.text(),
             'video_file': self.ui.project_widgets['video_name_textfield'].text_field.text(),
             'project_folder': self.ui.project_widgets['project_folder_textfield'].text_field.text(),
+            'frame_extraction_textfield': self.ui.project_widgets['frame_extraction_textfield'].text_field.text(),
             'classes': self.classes_values
         }
         self.close()
