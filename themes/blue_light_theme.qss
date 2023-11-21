@@ -343,6 +343,15 @@ MD3Slider::sub-page:disabled {
     background: hsl(0, 0%, 71%)
 }
 
+/* Table */
+MD3Table {
+    border-width: 2px;
+    border-style: solid;
+    border-color: hsl(204, 86%, 53%);
+    background-color: transparent;
+    color: hsl(0, 0%, 21%);
+}
+
 /* Divider */
 MD3Divider {
     border: 1px solid hsl(204, 86%, 53%);
