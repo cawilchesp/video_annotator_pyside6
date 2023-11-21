@@ -21,6 +21,7 @@ from PySide6.QtGui import QColor
 from PySide6.QtCore import QSettings, QRegularExpression, Qt
 
 from components.md3_label import MD3Label
+from components.md3_textfield import MD3TextField
 
 import yaml
 from pathlib import Path
@@ -58,6 +59,12 @@ class NewProject(QDialog):
 
         self.class_count = 0
 
+        self.form_fill_state = {
+            'project_name_textfield': False,
+            'video_name_textfield': False,
+            'project_folder_textfield': False
+        }
+
         # ----------------
         # Generación de UI
         # ----------------
@@ -67,16 +74,12 @@ class NewProject(QDialog):
         with open(theme_qss_file, "r") as theme_qss:
             self.setStyleSheet(theme_qss.read())
 
-        # self.class_value = mt3.ValueLabel(self.project_card, 'class_value',
-        #     (8, y, w), self.theme_value)
-        # self.class_value.setAlignment(Qt.AlignmentFlag.AlignTop)
-
 
     # ---------
     # Funciones
     # ---------
     def on_textEdited(self):
-        return None
+        self.enable_ok_button()
 
 
     def on_video_button_clicked(self) -> None:
@@ -162,28 +165,35 @@ class NewProject(QDialog):
             self.ui.project_widgets['new_class_table'].item(self.class_count - 1, 1).setBackground(QColor(self.color_value))
             
             self.ui.project_widgets['class_textfield'].text_field.setText('')
+        
+        self.enable_ok_button()
             
 
     def on_ok_button_clicked(self) -> None:
         """ Checking and saving form values """
-        print(self.classes_values)
-        # if (self.name_text.text_field.text() == '' or self.video_text.text_field.text() == '' or 
-        #         self.save_text.text_field.text() == '' or self.class_value.text() == ''):
-
-        #     if self.language_value == 0:
-        #         QtWidgets.QMessageBox.critical(self, 'Error en el Formulario', 'Hacen falta datos del proyecto')
-        #     elif self.language_value == 1:
-        #         QtWidgets.QMessageBox.critical(self, 'Form Error', 'Project data is missing')
-        # else:
-        #     self.project_data = {
-        #         'project_name': self.name_text.text_field.text(),
-        #         'video_file': self.video_text.text_field.text(),
-        #         'results_folder': self.save_text.text_field.text(),
-        #         'classes': self.classes_values
-        #     }
-        #     self.close()
+        self.project_data = {
+            'project_name': self.ui.project_widgets['project_name_textfield'].text_field.text(),
+            'video_file': self.ui.project_widgets['video_name_textfield'].text_field.text(),
+            'project_folder': self.ui.project_widgets['project_folder_textfield'].text_field.text(),
+            'classes': self.classes_values
+        }
+        self.close()
 
 
     def on_cancel_button_clicked(self) -> None:
         """ Close dialog window without saving """
         self.close()
+
+
+    def enable_ok_button(self) -> bool:
+        """ Enable OK button if all form spaces are filled """
+        for key in self.form_fill_state.keys():
+            if self.ui.project_widgets[key].text_field.text() == '':
+                self.form_fill_state[key] = False
+            else: 
+                self.form_fill_state[key] = True
+
+        if False in self.form_fill_state.values():
+            return self.ui.project_widgets['ok_button'].setEnabled(False)
+        elif len(self.classes_values) > 0:
+            return self.ui.project_widgets['ok_button'].setEnabled(True)
