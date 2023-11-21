@@ -161,17 +161,34 @@ class UI(QWidget):
             'labels': ('CPS', 'FPS'),
             'language': self.language_value } )
 
-        # # ------------
-        # # Card Classes
-        # # ------------
-        # self.gui_widgets['classes_card'] = MD3Card(parent, { 
-        #     'name': 'classes_card',
-        #     'position': (8, 344), 
-        #     'size': (180, 288),
-        #     'type': 'filled',
-        #     'labels': ('Clases', 'Classes'),
-        #     'theme': self.theme_value,
-        #     'language': self.language_value } )
+        # --------------
+        # Card Labelling
+        # --------------
+        self.gui_widgets['labelling_card'] = MD3Card(parent, { 
+            'position': (8, 288),
+            'size': (180, 288),
+            'type': 'outlined',
+            'titles': ('Etiquetado', 'Labelling'),
+            'language': self.language_value } )
+        
+
+
+
+
+
+        # -------------------
+        # Card Auto-Labelling
+        # -------------------
+        self.gui_widgets['autolabelling_card'] = MD3Card(parent, { 
+            'size': (180, 288),
+            'type': 'outlined',
+            'titles': ('Autoetiquetado', 'Autolabelling'),
+            'language': self.language_value } )
+        
+
+
+
+
         
         # self.gui_widgets['person_icon'] = MD3Label(self.gui_widgets['classes_card'], {
         #     'name': 'person_icon', 
