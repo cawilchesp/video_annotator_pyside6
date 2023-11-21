@@ -348,7 +348,6 @@ MD3Table {
     border-width: 2px;
     border-style: solid;
     border-color: hsl(204, 86%, 53%);
-    /* border-radius: 16px; */
     background-color: transparent;
     color: hsl(0, 0%, 96%);
 }
