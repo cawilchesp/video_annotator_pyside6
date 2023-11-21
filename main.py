@@ -204,7 +204,9 @@ class MainWindow(QMainWindow):
         self.ui.gui_widgets['video_slider'].resize(self.ui.gui_widgets['video_toolbar_card'].width() - 324, 32)
         self.ui.gui_widgets['frame_value_textfield'].move(self.ui.gui_widgets['video_toolbar_card'].width() - 108, 8)
 
-        self.ui.gui_widgets['video_output_card'].resize(width - 204, height - 92)
+        self.ui.gui_widgets['video_output_card'].resize(width - 392, height - 92)
+
+        self.ui.gui_widgets['autolabelling_card'].move(width - 188, 84)
 
         frame_width = (self.ui.gui_widgets['video_output_card'].height() - 56) * self.aspect_ratio
         frame_height = self.ui.gui_widgets['video_output_card'].height() - 56
@@ -234,16 +236,13 @@ class MainWindow(QMainWindow):
             video_file = self.project_info['video_file']
             project_folder = self.project_info['project_folder']
             classes = self.project_info['classes']
+            frame_extraction = self.project_info['frame_extraction']
 
-            ic(project_name)
-            ic(video_file)
-            ic(project_folder)
-            ic(classes)
 
-        #     # Creación de la carpeta del proyecto
-        #     project_folder = pathlib.Path(f'{results_folder}/{project_name}')
-        #     if not project_folder.exists():
-        #         project_folder.mkdir()
+            # Creación de la carpeta del proyecto
+            main_project_folder = pathlib.Path(f'{project_folder}/{project_name}')
+            if not main_project_folder.exists():
+                main_project_folder.mkdir()
 
         #         self.clases_menu.clear()
         #         for key, value in classes.items():
