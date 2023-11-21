@@ -36,7 +36,7 @@ class ProjectUI(QDialog):
         # -----------
         # Main Window
         # -----------
-        (width, height) = (380, 392)
+        (width, height) = (380, 452)
         self.project_widgets['main_window'] = MD3Window( {
             'parent': parent,
             'size': (width, height),
@@ -92,38 +92,47 @@ class ProjectUI(QDialog):
             'theme_color': self.theme_color,
             'clicked': parent.on_save_button_clicked } )
         
-        self.project_widgets['class_textfield'] = MD3TextField(self.project_widgets['project_card'], {
+        self.project_widgets['frame_extraction_textfield'] = MD3TextField(self.project_widgets['project_card'], {
             'position': (8, 228),
-            'width': 160,
+            'width': width - 32,
             'type': 'outlined',
-            'labels': ('Clases', 'Classes'),
+            'input': 'integer',
+            'labels': ('Extraer Cada Número de Cuadros', 'Extract Every Number of Frames'),
+            'language': self.language_value } )
+        
+        self.project_widgets['class_textfield'] = MD3TextField(self.project_widgets['project_card'], {
+            'position': (8, 288),
+            'width': width - 152,
+            'type': 'outlined',
+            'labels': ('Nombre de la Clase', 'Class Name'),
             'language': self.language_value } )
         
         self.project_widgets['class_color_button'] = MD3Button(self.project_widgets['project_card'], {
-            'position': (176, 242),
+            'position': (width - 136, 304),
             'type': 'filled',
             'icon': 'palette',
             'theme_color': self.theme_color,
             'clicked': parent.on_class_color_button_clicked } )
         
         self.project_widgets['class_color_label'] = MD3Label(self.project_widgets['project_card'], {
-            'position': (216, 242),
+            'position': (width - 96, 304),
             'type': 'color',
             'color': '#ff8888',
             'theme_color': self.theme_color } )
         
         self.project_widgets['class_add_button'] = MD3Button(self.project_widgets['project_card'], {
-            'position': (256, 242),
+            'position': (width - 56, 304),
             'type': 'filled',
             'icon': 'new',
             'theme_color': self.theme_color,
             'clicked': parent.on_class_add_button_clicked } )
         
         self.project_widgets['new_class_table'] = MD3Table(self.project_widgets['project_card'], {
-            'position': (8, 288),
-            'width': 200,
+            'position': (8, 348),
             'columns': 2,
+            'column_widths': [100, 50],
             'rows': 1,
+            'row_heights': [40],
             'header': False,
             'scrollbar': False } )
 
