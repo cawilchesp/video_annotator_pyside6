@@ -226,14 +226,19 @@ class MainWindow(QMainWindow):
         self.new_window = NewProject()
         self.new_window.exec()
 
-        # self.project_info = self.new_window.project_data
+        self.project_info = self.new_window.project_data
 
-        # if self.project_info:
-        #     # Información del proyecto
-        #     project_name = self.project_info['project_name']
-        #     video_file = self.project_info['video_file']
-        #     results_folder = self.project_info['results_folder']
-        #     classes = self.project_info['classes']
+        if self.project_info:
+            # Información del proyecto
+            project_name = self.project_info['project_name']
+            video_file = self.project_info['video_file']
+            project_folder = self.project_info['project_folder']
+            classes = self.project_info['classes']
+
+            ic(project_name)
+            ic(video_file)
+            ic(project_folder)
+            ic(classes)
 
         #     # Creación de la carpeta del proyecto
         #     project_folder = pathlib.Path(f'{results_folder}/{project_name}')
