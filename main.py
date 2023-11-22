@@ -223,20 +223,20 @@ class MainWindow(QMainWindow):
                     frame_width = self.ui.gui_widgets['video_output_card'].width() - 16
                     frame_height = frame_width / self.aspect_ratio
                 self.ui.gui_widgets['video_label'].resize(frame_width, frame_height)
-        #     else:
-        #         if self.language_value == 0:
-        #             QtWidgets.QMessageBox.critical(self, 'Error en la creación', 'La carpeta ya existe')
-        #         elif self.language_value == 1:
-        #             QtWidgets.QMessageBox.critical(self, 'Creation Error', 'Folder already exists')
+            else:
+                self.info_app = InfoMessageApp({'size': (300, 100), 'type': 'warning',
+                    'messages': ("La carpeta ya existe",
+                                "Folder already exists") })
+                self.info_app.exec()
 
     # --------------------
     # Funciones Etiquetado
     # --------------------
     def on_classes_changed(self, index: int):
         classes = self.project_info['classes']
-        self.active_class = self.clases_menu.currentText()
-        self.active_color = classes[self.clases_menu.currentText()]
-        self.color_label.set_color(self.active_color)
+        self.active_class = self.ui.gui_widgets['classes_menu'].currentText()
+        self.active_color = classes[self.active_class]
+        self.ui.gui_widgets['class_color_label'].set_color_label(self.active_color)
 
     def on_drag_button_clicked(self):
         return None
