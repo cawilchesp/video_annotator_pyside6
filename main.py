@@ -207,6 +207,7 @@ class MainWindow(QMainWindow):
         self.ui.gui_widgets['video_output_card'].resize(width - 392, height - 92)
 
         self.ui.gui_widgets['autolabelling_card'].move(width - 188, 84)
+        
 
         frame_width = (self.ui.gui_widgets['video_output_card'].height() - 56) * self.aspect_ratio
         frame_height = self.ui.gui_widgets['video_output_card'].height() - 56
@@ -214,10 +215,7 @@ class MainWindow(QMainWindow):
             frame_width = self.ui.gui_widgets['video_output_card'].width() - 16
             frame_height = frame_width / self.aspect_ratio
         self.ui.gui_widgets['video_label'].resize(frame_width, frame_height)
-        
-    #     self.opciones_card.setGeometry(width - 188, 64, 180, 128)
-    #     self.anotaciones_card.setGeometry(width - 188, 200, 180, height - 208)
-        
+                
         return super().resizeEvent(a0)
 
     # ------------------
@@ -288,30 +286,55 @@ class MainWindow(QMainWindow):
         #         elif self.language_value == 1:
         #             QtWidgets.QMessageBox.critical(self, 'Creation Error', 'Folder already exists')
 
-
-    # ----------------
-    # Funciones Clases
-    # ----------------
+    # --------------------
+    # Funciones Etiquetado
+    # --------------------
     def on_clases_menu_currentIndexChanged(self, index: int):
         classes = self.project_info['classes']
         self.active_class = self.clases_menu.currentText()
         self.active_color = classes[self.clases_menu.currentText()]
         self.color_label.set_color(self.active_color)
 
+    def on_drag_button_clicked(self):
+        return None
 
-    # ----------------
-    # Funciones Formas
-    # ----------------
-    def on_rectangulo_button_clicked(self):
+    def on_polygon_button_clicked(self):
+        return None
+
+    def on_box_button_clicked(self):
         # Activa la herramienta rectángulo
-        return 0
+        return None
     
-
     # ------------------
     # Funciones Opciones
     # ------------------
+    def on_minus_button_clicked(self):
+        return None
 
+    def on_zoom_value_textfield_returnPressed(self):
+        return None
+    
+    def on_plus_button_clicked(self):
+        return None
+    
+    def on_undo_button_clicked(self):
+        return None
 
+    def on_redo_button_clicked(self):
+        return None
+        
+    # ------------------------
+    # Funciones Autoetiquetado
+    # ------------------------
+
+    def on_models_changed(self):
+        return None
+
+    def on_autobox_button_clicked(self):
+        return None
+
+    def on_autopolygon_button_clicked(self):
+        return None
 
     # -------------
     # Video Toolbar
