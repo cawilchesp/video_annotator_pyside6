@@ -46,11 +46,10 @@ class MainWindow(QMainWindow):
         # Variables
         # ---------
 
-        # self.frames_folder = ''
-        # self.labeled_folder = ''
-        # self.resized_folder = ''
+        self.frames_folder = ''
+        self.labeled_folder = ''
+        self.resized_folder = ''
 
-        self.cap = None
         self.video_width = None
         self.video_height = None
         self.video_total_frames = None
@@ -64,9 +63,9 @@ class MainWindow(QMainWindow):
         self.time_step = 0
         self.frame_number = 0
 
-        # self.project_info = None
-        # self.active_class = ''
-        # self.active_color = ''
+        self.project_info = None
+        self.active_class = ''
+        self.active_color = ''
 
         # ---
         # GUI
@@ -76,70 +75,6 @@ class MainWindow(QMainWindow):
         theme_qss_file = f"themes/{self.theme_color}_{theme}_theme.qss"
         with open(theme_qss_file, "r") as theme_qss:
             self.setStyleSheet(theme_qss.read())
-
-        
-
-
-
-        # # -----------
-        # # Card Clases
-        # # -----------
-        # self.clases_card = mt3.Card(self, 'clases_card',
-        #     (8, 418, 180, 88), ('Clases', 'Classes'), 
-        #     self.theme_value, self.language_value)
-
-        # y_3 = 48
-        # self.clases_menu = mt3.Menu(self.clases_card, 'clases_menu',
-        #     (8, y_3, 124), 10, 10, {}, self.theme_value, self.language_value)
-        # self.clases_menu.currentIndexChanged.connect(self.on_clases_menu_currentIndexChanged)
-        
-        # self.color_label = mt3.ColorLabel(self.clases_card, 'color_label',
-        #     (140, y_3), '0,0,0')
-        
-        # # -----------
-        # # Card Formas
-        # # -----------
-        # self.formas_card = mt3.Card(self, 'formas_card',
-        #     (8, 514, 180, 128), ('Formas', 'Shapes'), 
-        #     self.theme_value, self.language_value)
-        
-        # y_4 = 48
-        # self.rectangulo_button = mt3.IconButton(self.formas_card, 'rectangulo_button',
-        #     (25, y_4), 'rectangle.png', self.theme_value)
-        # self.rectangulo_button.clicked.connect(self.on_rectangulo_button_clicked)
-        
-        # self.poligono_button = mt3.IconButton(self.formas_card, 'poligono_button',
-        #     (135, y_4), 'poligono.png', self.theme_value)
-
-        # self.prelabelling_button = mt3.IconButton(self.opciones_card, 'tamanoNormal_button',
-        #     (110, y_5), 'zoom_out.png', self.theme_value)
-        
-        # # -------------
-        # # Card Opciones
-        # # -------------
-        # self.opciones_card = mt3.Card(self, 'opciones_card',
-        #     (1520, 70, 180, 130), ('Opciones', 'Options'), 
-        #     self.theme_value, self.language_value)
-        
-        # self.guardar_button = mt3.IconButton(self.opciones_card, 'guardar_button',
-        #     (25, y_5), 'save.png', self.theme_value)
-        
-        # self.deshacer_button = mt3.IconButton(self.opciones_card, 'deshacer_button',
-        #     (80, y_5), 'undo.png', self.theme_value)
-        
-        # self.aumentar_button = mt3.IconButton(self.opciones_card, 'aumentar_button',
-        #     (50, y_5), 'zoom_in.png', self.theme_value)
-
-        # self.tamanoNormal_button = mt3.IconButton(self.opciones_card, 'tamanoNormal_button',
-        #     (110, y_5), 'zoom_out.png', self.theme_value)
-
-        # # ----------------
-        # # Card Anotaciones
-        # # ----------------
-        # self.anotaciones_card = mt3.Card(self, 'anotaciones_card',
-        #     (1520, 200, 180, 820), ('Anotaciones', 'Annotations'), 
-        #     self.theme_value, self.language_value)
-        
 
     # -----------------
     # Options Functions
@@ -236,44 +171,51 @@ class MainWindow(QMainWindow):
             classes = self.project_info['classes']
             frame_extraction = self.project_info['frame_extraction']
 
-
             # Creación de la carpeta del proyecto
             main_project_folder = pathlib.Path(f'{project_folder}/{project_name}')
             if not main_project_folder.exists():
                 main_project_folder.mkdir()
 
-        #         self.clases_menu.clear()
-        #         for key, value in classes.items():
-        #             self.clases_menu.addItem(key)
-        #         self.clases_menu.setCurrentIndex(0)
+                # Creación de sub-carpetas
+                self.frames_folder = pathlib.Path(f'{project_folder}/{project_name}/frames')
+                self.frames_folder.mkdir()
 
-        #         frames_folder = pathlib.Path(f'{results_folder}/{project_name}/frames')
-        #         frames_folder.mkdir()
-        #         self.frames_folder = frames_folder
+                self.labeled_folder = pathlib.Path(f'{project_folder}/{project_name}/labels')
+                self.labeled_folder.mkdir()
 
-        #         labeled_folder = pathlib.Path(f'{results_folder}/{project_name}/labels')
-        #         labeled_folder.mkdir()
+                self.resized_folder = pathlib.Path(f'{project_folder}/{project_name}/resized')
+                self.resized_folder.mkdir()
 
-        #         resized_folder = pathlib.Path(f'{results_folder}/{project_name}/resized')
-        #         resized_folder.mkdir()
+                # Extracción de información del video
+                video_properties = backend.open_video(video_file)
+                self.video_width = video_properties["width"]
+                self.video_height = video_properties["height"]
+                self.total_frames = video_properties['frame_count']
+                self.video_fps = video_properties['fps']
 
-        #         # Extracción de información del video
-        #         video_properties = backend.open_video(video_file)
-        #         self.video_width = video_properties["width"]
-        #         self.video_height = video_properties["height"]
-        #         self.total_frames = video_properties['frame_count']
-        #         self.video_fps = video_properties['fps']
+                # Presentación de Información
+                self.ui.gui_widgets['filename_value'].setText(f'{pathlib.Path(video_file).name}')
+                self.ui.gui_widgets['size_value'].setText(f'{self.video_width} X {self.video_height}')
+                self.ui.gui_widgets['total_frames_value'].setText(f'{self.total_frames}')
+                self.ui.gui_widgets['fps_value'].setText(f"{self.video_fps}")
 
-        #         # Presentación de Información
-        #         self.nombre_value.setText(f'{project_name}')
-        #         self.video_value.setText(f'{pathlib.Path(video_file).name}')
-        #         self.size_value.setText(f'{self.video_width} X {self.video_height}')
-        #         self.frames_value.setText(f'{self.total_frames} frames')
+                # Configuración de clases
+                self.ui.gui_widgets['classes_menu'].clear()
+                for class_name in classes.keys():
+                    self.ui.gui_widgets['classes_menu'].addItem(class_name)
 
-        #         self.video_slider.setMaximum(self.total_frames)
+                # Configuración de barra de video
+                self.ui.gui_widgets['video_slider'].setMaximum(self.total_frames)
+                self.ui.gui_widgets['video_slider'].setEnabled(True)
+                self.ui.gui_widgets['frame_value_textfield'].text_field.setText(0)
 
-        #         # Extracción de frames del video
-        #         backend.frame_extraction(video_file, frames_folder, labeled_folder, resized_folder)
+                # Extracción de frames del video
+                backend.frame_extraction(video_file, frames_folder, labeled_folder, resized_folder)
+
+
+
+
+
                 
         #         # Presentación del frame 0
         #         cv_img = cv2.imread(f'{frames_folder}/image_000000.png')
