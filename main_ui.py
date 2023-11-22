@@ -177,7 +177,7 @@ class UI(QWidget):
             'type': 'outlined',
             'set': -1,
             'language': self.language_value,
-            'index_changed': parent.on_language_changed } )
+            'index_changed': parent.on_classes_changed } )
         
         self.gui_widgets['class_color_label'] = MD3Label(self.gui_widgets['labelling_card'], {
             'position': (140, 48),
