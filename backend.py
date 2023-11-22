@@ -37,21 +37,26 @@ def open_video(source_file: str):
     return video_properties
 
 
-def frame_extraction(source_file: str, frames_folder: str, labeled_folder: str, resized_folder: str):
+def frame_extraction(source_file: str, frames_folder: str, labeled_folder: str, resized_folder: str, frame_extraction: int):
     cap = cv2.VideoCapture(source_file)
     if not cap.isOpened():
         print('Error opening video stream or file')
         return 0
-
-    frame_progressBar = QtWidgets.QProgressDialog('Extrayendo frames...',
-                            'Cancelar', 0, int(cap.get(cv2.CAP_PROP_FRAME_COUNT)))
-    frame_progressBar.setWindowModality(Qt.WindowModality.WindowModal)
+    
+    frame_progress_bar = QtWidgets.QProgressDialog(
+        labelText = 'Extrayendo frames...',
+        cancelButtonText = 'Cancelar', 
+        minimum = 0, 
+        maximum = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    )
+    frame_progress_bar.setWindowModality(Qt.WindowModality.WindowModal)
     
     frame_number = 0
     while(cap.isOpened()):
-        frame_progressBar.setValue(frame_number)
+        frame_progress_bar.setValue(frame_number)
+        cap.set(cv2.CAP_PROP_POS_FRAMES, frame_number)
         ret, frame = cap.read()
-        if not ret or frame_progressBar.wasCanceled():
+        if not ret or frame_progress_bar.wasCanceled():
             break
         
         frame_text = f'{frame_number}'.zfill(6)
@@ -65,5 +70,6 @@ def frame_extraction(source_file: str, frames_folder: str, labeled_folder: str, 
         resized_frame = cv2.resize(frame, [416, 416], interpolation= cv2.INTER_LINEAR)
         cv2.imwrite(resized_image, resized_frame)
         
-        frame_number += 1
+        frame_number += frame_extraction
 
+    cap.release()
