@@ -32,6 +32,8 @@ def open_video(source_file: str):
         'fps': float(cap.get(cv2.CAP_PROP_FPS))
     }
 
+    cap.release()
+
     return video_properties
 
 
