@@ -192,6 +192,7 @@ class MainWindow(QMainWindow):
                 self.video_height = video_properties["height"]
                 self.total_frames = video_properties['frame_count']
                 self.video_fps = video_properties['fps']
+                self.aspect_ratio = float(self.video_width / self.video_height)
 
                 # Presentación de Información
                 self.ui.gui_widgets['filename_value'].setText(f'{pathlib.Path(video_file).name}')
@@ -207,21 +208,21 @@ class MainWindow(QMainWindow):
                 # Configuración de barra de video
                 self.ui.gui_widgets['video_slider'].setMaximum(self.total_frames)
                 self.ui.gui_widgets['video_slider'].setEnabled(True)
-                self.ui.gui_widgets['frame_value_textfield'].text_field.setText(0)
+                self.ui.gui_widgets['frame_value_textfield'].text_field.setText('0')
 
                 # Extracción de frames del video
-                backend.frame_extraction(video_file, frames_folder, labeled_folder, resized_folder)
+                backend.frame_extraction(video_file, self.frames_folder, self.labeled_folder, self.resized_folder, frame_extraction)
 
-
-
-
-
-                
-        #         # Presentación del frame 0
-        #         cv_img = cv2.imread(f'{frames_folder}/image_000000.png')
-        #         qt_img = backend.convert_cv_qt(cv_img)
-        #         self.imagen_label.setPixmap(qt_img)
-        #         self.frame_text.text_field.setText('0')
+                # Presentación del frame 0
+                image = cv2.imread(f'{self.frames_folder}/image_000000.png')
+                qt_image = self.convert_cv_qt(image)
+                self.ui.gui_widgets['video_label'].setPixmap(qt_image)
+                frame_width = (self.ui.gui_widgets['video_output_card'].height() - 56) * self.aspect_ratio
+                frame_height = self.ui.gui_widgets['video_output_card'].height() - 56
+                if frame_width > self.ui.gui_widgets['video_output_card'].width() - 16:
+                    frame_width = self.ui.gui_widgets['video_output_card'].width() - 16
+                    frame_height = frame_width / self.aspect_ratio
+                self.ui.gui_widgets['video_label'].resize(frame_width, frame_height)
         #     else:
         #         if self.language_value == 0:
         #             QtWidgets.QMessageBox.critical(self, 'Error en la creación', 'La carpeta ya existe')
@@ -231,7 +232,7 @@ class MainWindow(QMainWindow):
     # --------------------
     # Funciones Etiquetado
     # --------------------
-    def on_clases_menu_currentIndexChanged(self, index: int):
+    def on_classes_changed(self, index: int):
         classes = self.project_info['classes']
         self.active_class = self.clases_menu.currentText()
         self.active_color = classes[self.clases_menu.currentText()]
