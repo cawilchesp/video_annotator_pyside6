@@ -166,168 +166,124 @@ class UI(QWidget):
         # --------------
         self.gui_widgets['labelling_card'] = MD3Card(parent, { 
             'position': (8, 288),
-            'size': (180, 288),
+            'size': (180, 128),
             'type': 'outlined',
             'titles': ('Etiquetado', 'Labelling'),
             'language': self.language_value } )
         
+        self.gui_widgets['classes_menu'] = MD3Menu(self.gui_widgets['labelling_card'], {
+            'position': (8, 48),
+            'width': 124,
+            'type': 'outlined',
+            'set': -1,
+            'language': self.language_value,
+            'index_changed': parent.on_language_changed } )
+        
+        self.gui_widgets['class_color_label'] = MD3Label(self.gui_widgets['labelling_card'], {
+            'position': (140, 48),
+            'type': 'color',
+            'color': '#ffffff',
+            'theme_color': self.theme_color } )
+        
+        self.gui_widgets['drag_button'] = MD3Button(self.gui_widgets['labelling_card'], {
+            'position': (60, 88),
+            'type': 'filled',
+            'icon': 'drag',
+            'theme_color': self.theme_color,
+            'clicked': parent.on_drag_button_clicked } )
+        
+        self.gui_widgets['polygon_button'] = MD3Button(self.gui_widgets['labelling_card'], {
+            'position': (100, 88),
+            'type': 'filled',
+            'icon': 'polygon',
+            'theme_color': self.theme_color,
+            'clicked': parent.on_polygon_button_clicked } )
+        
+        self.gui_widgets['box_button'] = MD3Button(self.gui_widgets['labelling_card'], {
+            'position': (140, 88),
+            'type': 'filled',
+            'icon': 'square',
+            'theme_color': self.theme_color,
+            'clicked': parent.on_box_button_clicked } )
 
+        # ----------------------
+        # Card Labelling Options
+        # ----------------------
+        self.gui_widgets['options_card'] = MD3Card(parent, { 
+            'position': (8, 424),
+            'size': (180, 148),
+            'type': 'outlined',
+            'titles': ('Opciones', 'Options'),
+            'language': self.language_value } )
 
+        self.gui_widgets['minus_button'] = MD3Button(self.gui_widgets['options_card'], {
+            'position': (8, 60),
+            'type': 'filled',
+            'icon': 'minus',
+            'theme_color': self.theme_color,
+            'clicked': parent.on_minus_button_clicked } )
 
+        self.gui_widgets['zoom_value_textfield'] = MD3TextField(self.gui_widgets['options_card'], {
+            'position': (48, 48),
+            'width': 84,
+            'type': 'outlined',
+            'labels': ('Zoom', 'Zoom'),
+            'input': 'integer',
+            'language': self.language_value,
+            'return_pressed': parent.on_zoom_value_textfield_returnPressed } )
 
+        self.gui_widgets['plus_button'] = MD3Button(self.gui_widgets['options_card'], {
+            'position': (140, 60),
+            'type': 'filled',
+            'icon': 'new',
+            'theme_color': self.theme_color,
+            'clicked': parent.on_plus_button_clicked } )
+        
+        self.gui_widgets['undo_button'] = MD3Button(self.gui_widgets['options_card'], {
+            'position': (100, 108),
+            'type': 'filled',
+            'icon': 'undo',
+            'theme_color': self.theme_color,
+            'clicked': parent.on_undo_button_clicked } )
+
+        self.gui_widgets['redo_button'] = MD3Button(self.gui_widgets['options_card'], {
+            'position': (140, 108),
+            'type': 'filled',
+            'icon': 'redo',
+            'theme_color': self.theme_color,
+            'clicked': parent.on_redo_button_clicked } )
 
         # -------------------
         # Card Auto-Labelling
         # -------------------
-        self.gui_widgets['autolabelling_card'] = MD3Card(parent, { 
-            'size': (180, 288),
+        self.gui_widgets['autolabelling_card'] = MD3Card(parent, {
+            'size': (180, 128),
             'type': 'outlined',
             'titles': ('Autoetiquetado', 'Autolabelling'),
             'language': self.language_value } )
         
-
-
-
-
+        self.gui_widgets['models_menu'] = MD3Menu(self.gui_widgets['autolabelling_card'], {
+            'position': (8, 48),
+            'width': 164,
+            'type': 'outlined',
+            'set': -1,
+            'language': self.language_value,
+            'index_changed': parent.on_models_changed } )
         
-        # self.gui_widgets['person_icon'] = MD3Label(self.gui_widgets['classes_card'], {
-        #     'name': 'person_icon', 
-        #     'position': (8, 48),
-        #     'type': 'icon',
-        #     'icon': 'person',
-        #     'theme': self.theme_value } )
+        self.gui_widgets['autobox_button'] = MD3Button(self.gui_widgets['autolabelling_card'], {
+            'position': (100, 88),
+            'type': 'filled',
+            'icon': 'square_plus',
+            'theme_color': self.theme_color,
+            'clicked': parent.on_autobox_button_clicked } )
+        
+        self.gui_widgets['autopolygon_button'] = MD3Button(self.gui_widgets['autolabelling_card'], {
+            'position': (140, 88),
+            'type': 'filled',
+            'icon': 'polygon_plus',
+            'theme_color': self.theme_color,
+            'clicked': parent.on_autopolygon_button_clicked } )
 
-        # self.gui_widgets['person_off_switch'] = MD3Switch(self.gui_widgets['classes_card'], {
-        #     'name': 'person_off_switch',
-        #     'position': (48, 48),
-        #     'side': 'left',
-        #     'state': False,
-        #     'theme': self.theme_value,
-        #     'clicked': parent.on_person_switch_clicked } )
-        
-        # self.gui_widgets['person_on_switch'] = MD3Switch(self.gui_widgets['classes_card'], {
-        #     'name': 'person_on_switch',
-        #     'position': (74, 48),
-        #     'side': 'right',
-        #     'state': False,
-        #     'theme': self.theme_value,
-        #     'clicked': parent.on_person_switch_clicked } )
-        
-        # self.gui_widgets['bicycle_icon'] = MD3Label(self.gui_widgets['classes_card'], {
-        #     'name': 'bicycle_icon', 
-        #     'position': (8, 88),
-        #     'type': 'icon',
-        #     'icon': 'bicycle',
-        #     'theme': self.theme_value } )
-
-        # self.gui_widgets['bicycle_off_switch'] = MD3Switch(self.gui_widgets['classes_card'], {
-        #     'name': 'bicycle_off_switch',
-        #     'position': (48, 88),
-        #     'side': 'left',
-        #     'state': False,
-        #     'theme': self.theme_value,
-        #     'clicked': parent.on_bicycle_switch_clicked } )
-        
-        # self.gui_widgets['bicycle_on_switch'] = MD3Switch(self.gui_widgets['classes_card'], {
-        #     'name': 'bicycle_on_switch',
-        #     'position': (74, 88),
-        #     'side': 'right',
-        #     'state': False,
-        #     'theme': self.theme_value,
-        #     'clicked': parent.on_bicycle_switch_clicked } )
-
-        # self.gui_widgets['car_icon'] = MD3Label(self.gui_widgets['classes_card'], {
-        #     'name': 'car_icon', 
-        #     'position': (8, 128),
-        #     'type': 'icon',
-        #     'icon': 'car',
-        #     'theme': self.theme_value } )
-
-        # self.gui_widgets['car_off_switch'] = MD3Switch(self.gui_widgets['classes_card'], {
-        #     'name': 'car_off_switch',
-        #     'position': (48, 128),
-        #     'side': 'left',
-        #     'state': False,
-        #     'theme': self.theme_value,
-        #     'clicked': parent.on_car_switch_clicked } )
-        
-        # self.gui_widgets['car_on_switch'] = MD3Switch(self.gui_widgets['classes_card'], {
-        #     'name': 'car_on_switch',
-        #     'position': (74, 128),
-        #     'side': 'right',
-        #     'state': False,
-        #     'theme': self.theme_value,
-        #     'clicked': parent.on_car_switch_clicked } )
-        
-        # self.gui_widgets['motorcycle_icon'] = MD3Label(self.gui_widgets['classes_card'], {
-        #     'name': 'motorcycle_icon', 
-        #     'position': (8, 168),
-        #     'type': 'icon',
-        #     'icon': 'motorcycle',
-        #     'theme': self.theme_value } )
-
-        # self.gui_widgets['motorcycle_off_switch'] = MD3Switch(self.gui_widgets['classes_card'], {
-        #     'name': 'motorcycle_off_switch',
-        #     'position': (48, 168),
-        #     'side': 'left',
-        #     'state': False,
-        #     'theme': self.theme_value,
-        #     'clicked': parent.on_motorcycle_switch_clicked } )
-        
-        # self.gui_widgets['motorcycle_on_switch'] = MD3Switch(self.gui_widgets['classes_card'], {
-        #     'name': 'motorcycle_on_switch',
-        #     'position': (74, 168),
-        #     'side': 'right',
-        #     'state': False,
-        #     'theme': self.theme_value,
-        #     'clicked': parent.on_motorcycle_switch_clicked } )
-
-        # self.gui_widgets['bus_icon'] = MD3Label(self.gui_widgets['classes_card'], {
-        #     'name': 'bus_icon', 
-        #     'position': (8, 208),
-        #     'type': 'icon',
-        #     'icon': 'bus',
-        #     'theme': self.theme_value } )
-
-        # self.gui_widgets['bus_off_switch'] = MD3Switch(self.gui_widgets['classes_card'], {
-        #     'name': 'bus_off_switch',
-        #     'position': (48, 208),
-        #     'side': 'left',
-        #     'state': False,
-        #     'theme': self.theme_value,
-        #     'clicked': parent.on_bus_switch_clicked } )
-        
-        # self.gui_widgets['bus_on_switch'] = MD3Switch(self.gui_widgets['classes_card'], {
-        #     'name': 'bus_on_switch',
-        #     'position': (74, 208),
-        #     'side': 'right',
-        #     'state': False,
-        #     'theme': self.theme_value,
-        #     'clicked': parent.on_bus_switch_clicked } )
-        
-        # self.gui_widgets['truck_icon'] = MD3Label(self.gui_widgets['classes_card'], {
-        #     'name': 'truck_icon', 
-        #     'position': (8, 248),
-        #     'type': 'icon',
-        #     'icon': 'truck',
-        #     'theme': self.theme_value } )
-
-        # self.gui_widgets['truck_off_switch'] = MD3Switch(self.gui_widgets['classes_card'], {
-        #     'name': 'truck_off_switch',
-        #     'position': (48, 248),
-        #     'side': 'left',
-        #     'state': False,
-        #     'theme': self.theme_value,
-        #     'clicked': parent.on_truck_switch_clicked } )
-        
-        # self.gui_widgets['truck_on_switch'] = MD3Switch(self.gui_widgets['classes_card'], {
-        #     'name': 'truck_on_switch',
-        #     'position': (74, 248),
-        #     'side': 'right',
-        #     'state': False,
-        #     'theme': self.theme_value,
-        #     'clicked': parent.on_truck_switch_clicked } )
-        
         # ------------------
         # Card Video Toolbar
         # ------------------
