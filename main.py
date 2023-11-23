@@ -102,7 +102,7 @@ class MainWindow(QMainWindow):
 
 
     def on_theme_clicked(self) -> None:
-        """ Dark theme segmented control to change components stylesheet
+        """ Theme button control to change components stylesheet
         
         """
         state = not self.theme_style
@@ -138,11 +138,8 @@ class MainWindow(QMainWindow):
         self.ui.gui_widgets['video_toolbar_card'].resize(width - 204, 68)
         self.ui.gui_widgets['video_slider'].resize(self.ui.gui_widgets['video_toolbar_card'].width() - 324, 32)
         self.ui.gui_widgets['frame_value_textfield'].move(self.ui.gui_widgets['video_toolbar_card'].width() - 108, 8)
-
         self.ui.gui_widgets['video_output_card'].resize(width - 392, height - 92)
-
         self.ui.gui_widgets['autolabelling_card'].move(width - 188, 84)
-        
 
         frame_width = (self.ui.gui_widgets['video_output_card'].height() - 56) * self.aspect_ratio
         frame_height = self.ui.gui_widgets['video_output_card'].height() - 56
@@ -209,6 +206,7 @@ class MainWindow(QMainWindow):
                 self.ui.gui_widgets['video_slider'].setMaximum(self.total_frames)
                 self.ui.gui_widgets['video_slider'].setEnabled(True)
                 self.ui.gui_widgets['frame_value_textfield'].text_field.setText('0')
+                self.ui.gui_widgets['zoom_value_textfield'].text_field.setText('100')
 
                 # Extracción de frames del video
                 backend.frame_extraction(video_file, self.frames_folder, self.labeled_folder, self.resized_folder, frame_extraction)
@@ -232,7 +230,7 @@ class MainWindow(QMainWindow):
     # --------------------
     # Funciones Etiquetado
     # --------------------
-    def on_classes_changed(self, index: int):
+    def on_classes_changed(self):
         classes = self.project_info['classes']
         self.active_class = self.ui.gui_widgets['classes_menu'].currentText()
         self.active_color = classes[self.active_class]
