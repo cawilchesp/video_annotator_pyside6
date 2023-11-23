@@ -62,6 +62,7 @@ class MainWindow(QMainWindow):
 
         self.time_step = 0
         self.frame_number = 0
+        self.image_number = 0
 
         self.project_info = None
         self.active_class = ''
@@ -208,6 +209,12 @@ class MainWindow(QMainWindow):
                 self.ui.gui_widgets['frame_value_textfield'].text_field.setText('0')
                 self.ui.gui_widgets['zoom_value_textfield'].text_field.setText('100')
 
+                # Timers
+                self.timer_play = QTimer()
+                self.timer_play.timeout.connect(self.play_forward)
+                self.timer_reverse = QTimer()
+                self.timer_reverse.timeout.connect(self.play_backward)
+
                 # Extracción de frames del video
                 backend.frame_extraction(video_file, self.frames_folder, self.labeled_folder, self.resized_folder, frame_extraction)
 
@@ -280,6 +287,20 @@ class MainWindow(QMainWindow):
     # -------------
     # Video Toolbar
     # -------------
+    # def on_backFrame_button_clicked(self):
+    #     # Save current frame
+    #     # if labels: guardar
+
+    #     frame_num = int(self.frame_text.text()) - 1
+    #     if (frame_num >= 0):
+    #         self.frame_text.setText(f'{frame_num}')
+    #         frame_text = self.frame_text.text().zfill(6)
+    #         cv_img = cv2.imread(f'{self.frames_folder}/image_{frame_text}.png')
+    #         qt_img = backend.convert_cv_qt(cv_img)
+    #         self.imagen_label.setPixmap(qt_img)
+    #         self.video_slider.setSliderPosition(int(frame_text))
+
+
     def on_backFrame_button_clicked(self) -> None:
         if self.timer_play.isActive(): self.timer_play.stop()
         if self.timer_reverse.isActive(): self.timer_reverse.stop()
@@ -326,18 +347,7 @@ class MainWindow(QMainWindow):
     # # ---------------
     # # Funciones Video
     # # ---------------
-    # def on_backFrame_button_clicked(self):
-    #     # Save current frame
-    #     # if labels: guardar
-
-    #     frame_num = int(self.frame_text.text()) - 1
-    #     if (frame_num >= 0):
-    #         self.frame_text.setText(f'{frame_num}')
-    #         frame_text = self.frame_text.text().zfill(6)
-    #         cv_img = cv2.imread(f'{self.frames_folder}/image_{frame_text}.png')
-    #         qt_img = backend.convert_cv_qt(cv_img)
-    #         self.imagen_label.setPixmap(qt_img)
-    #         self.video_slider.setSliderPosition(int(frame_text))
+    
 
 
     # def on_backPlay_button_clicked(self):
@@ -427,6 +437,16 @@ class MainWindow(QMainWindow):
 
 
     def draw_frame(self):
+        # No toma la captura sino que toma el nombre de la imagen
+        # a partir de self.image_number
+        #     frame_num = int(self.frame_text.text()) - 1
+        #     if (frame_num >= 0):
+        #         self.frame_text.setText(f'{frame_num}')
+        #         frame_text = self.frame_text.text().zfill(6)
+        #         cv_img = cv2.imread(f'{self.frames_folder}/image_{frame_text}.png')
+
+
+
         return None
         # self.cap.set(cv2.CAP_PROP_POS_FRAMES, self.frame_number)
         # _, image = self.cap.read()
