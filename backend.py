@@ -1,6 +1,5 @@
-from PySide6 import QtWidgets, QtGui
-from PySide6.QtGui import QPixmap
-from PySide6.QtCore import Qt, QSettings
+from PySide6.QtWidgets import QProgressDialog
+from PySide6.QtCore import Qt
 
 import sys
 import cv2
@@ -43,7 +42,7 @@ def frame_extraction(source_file: str, frames_folder: str, labeled_folder: str, 
         print('Error opening video stream or file')
         return 0
     
-    frame_progress_bar = QtWidgets.QProgressDialog(
+    frame_progress_bar = QProgressDialog(
         labelText = 'Extrayendo frames...',
         cancelButtonText = 'Cancelar', 
         minimum = 0, 
@@ -52,6 +51,7 @@ def frame_extraction(source_file: str, frames_folder: str, labeled_folder: str, 
     frame_progress_bar.setWindowModality(Qt.WindowModality.WindowModal)
     
     frame_number = 0
+    image_number = 0
     while(cap.isOpened()):
         frame_progress_bar.setValue(frame_number)
         cap.set(cv2.CAP_PROP_POS_FRAMES, frame_number)
@@ -59,7 +59,7 @@ def frame_extraction(source_file: str, frames_folder: str, labeled_folder: str, 
         if not ret or frame_progress_bar.wasCanceled():
             break
         
-        frame_text = f'{frame_number}'.zfill(6)
+        frame_text = f'{image_number}'.zfill(6)
         frame_image = f'{frames_folder}/image_{frame_text}.png'
         cv2.imwrite(frame_image, frame)
 
@@ -71,5 +71,6 @@ def frame_extraction(source_file: str, frames_folder: str, labeled_folder: str, 
         cv2.imwrite(resized_image, resized_frame)
         
         frame_number += frame_extraction
+        image_number += 1
 
     cap.release()
