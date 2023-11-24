@@ -56,7 +56,6 @@ class MainWindow(QMainWindow):
         self.video_fps = None
         self.aspect_ratio = 1.0
 
-        # self.play_state = False
         self.timer_play = None
         self.timer_reverse = None
 
@@ -64,6 +63,7 @@ class MainWindow(QMainWindow):
         self.frame_number = 0
         self.image_number = 0
         self.total_images = 0
+        self.current_image = None
 
         self.project_info = None
         self.active_class = ''
@@ -220,9 +220,7 @@ class MainWindow(QMainWindow):
                 self.timer_reverse.timeout.connect(self.play_backward)
 
                 # Presentación del frame 0
-                image = cv2.imread(f'{self.frames_folder}/image_000000.png')
-                qt_image = self.convert_cv_qt(image)
-                self.ui.gui_widgets['video_label'].setPixmap(qt_image)
+                self.draw_frame()
                 frame_width = (self.ui.gui_widgets['video_output_card'].height() - 56) * self.aspect_ratio
                 frame_height = self.ui.gui_widgets['video_output_card'].height() - 56
                 if frame_width > self.ui.gui_widgets['video_output_card'].width() - 16:
@@ -252,6 +250,7 @@ class MainWindow(QMainWindow):
 
     def on_box_button_clicked(self):
         # Activa la herramienta rectángulo
+        # Dibuja en self.current_image
         return None
     
     # ------------------
@@ -348,10 +347,12 @@ class MainWindow(QMainWindow):
 
     def draw_frame(self):
         frame_text = f'{self.image_number}'.zfill(6)
-        image = cv2.imread(f"{self.frames_folder}/image_{frame_text}.png")
-        qt_image = self.convert_cv_qt(image)
+        self.current_image = cv2.imread(f"{self.frames_folder}/image_{frame_text}.png")
+        qt_image = self.convert_cv_qt(self.current_image)
         self.ui.gui_widgets['video_label'].setPixmap(qt_image)
 
+
+    # def autobox_detections(self):
         # self.cap.set(cv2.CAP_PROP_POS_FRAMES, self.frame_number)
         # _, image = self.cap.read()
         # annotated_image = image.copy()
