@@ -36,7 +36,7 @@ def open_video(source_file: str):
     return video_properties
 
 
-def frame_extraction(source_file: str, frames_folder: str, labeled_folder: str, resized_folder: str, frame_extraction: int):
+def frame_extraction(source_file: str, frames_folder: str, labeled_folder: str, resized_folder: str, frame_extraction: int) -> int:
     cap = cv2.VideoCapture(source_file)
     if not cap.isOpened():
         print('Error opening video stream or file')
@@ -74,3 +74,5 @@ def frame_extraction(source_file: str, frames_folder: str, labeled_folder: str, 
         image_number += 1
 
     cap.release()
+
+    return image_number
