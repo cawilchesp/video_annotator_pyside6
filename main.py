@@ -315,8 +315,8 @@ class MainWindow(QMainWindow):
 
 
     def on_video_slider_sliderMoved(self) -> None:
-        self.frame_number = self.ui.gui_widgets['video_slider'].value()
-        self.ui.gui_widgets['frame_value_textfield'].text_field.setText(f"{self.frame_number}")
+        self.image_number = self.ui.gui_widgets['video_slider'].value()
+        self.ui.gui_widgets['frame_value_textfield'].text_field.setText(f"{self.image_number}")
         
 
     def on_video_slider_sliderReleased(self) -> None:
@@ -324,8 +324,14 @@ class MainWindow(QMainWindow):
 
 
     def on_frame_value_textfield_returnPressed(self) -> None:
-        self.frame_number = int(self.ui.gui_widgets['frame_value_textfield'].text_field.text())
-        self.ui.gui_widgets['video_slider'].setSliderPosition(self.frame_number)
+        self.image_number = int(self.ui.gui_widgets['frame_value_textfield'].text_field.text())
+        if self.image_number < 0:
+            self.image_number = 0
+        elif self.image_number >= self.total_images:
+            self.image_number = self.total_images - 1
+
+        self.ui.gui_widgets['frame_value_textfield'].text_field.setText(f"{self.image_number}")    
+        self.ui.gui_widgets['video_slider'].setSliderPosition(self.image_number)
         self.draw_frame()
 
     # ---------
@@ -396,6 +402,8 @@ class MainWindow(QMainWindow):
 
             self.ui.gui_widgets['video_slider'].setValue(self.image_number)
             self.ui.gui_widgets['frame_value_textfield'].text_field.setText(f"{self.image_number}")
+        else:
+            if self.timer_play.isActive(): self.timer_play.stop()
 
 
     def play_backward(self):
@@ -405,6 +413,8 @@ class MainWindow(QMainWindow):
 
             self.ui.gui_widgets['video_slider'].setValue(self.image_number)
             self.ui.gui_widgets['frame_value_textfield'].text_field.setText(f"{self.image_number}")
+        else:
+            if self.timer_reverse.isActive(): self.timer_reverse.stop()
     
 
 if __name__=="__main__":
