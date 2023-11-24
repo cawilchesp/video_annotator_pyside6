@@ -343,7 +343,7 @@ class UI(QWidget):
         self.gui_widgets['frame_value_textfield'] = MD3TextField(self.gui_widgets['video_toolbar_card'], {
             'width': 100,
             'type': 'outlined',
-            'labels': ('Cuadro', 'Frame'),
+            'labels': ('Imagen', 'Image'),
             'input': 'integer',
             'language': self.language_value,
             'return_pressed': parent.on_frame_value_textfield_returnPressed } )
