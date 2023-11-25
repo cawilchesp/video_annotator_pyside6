@@ -83,13 +83,28 @@ class UI(QWidget):
         # -----------
         self.gui_widgets['project_card'] = MD3Card(parent, {
             'position': (8, 8),
-            'size': (180, 88),
+            'size': (180, 128),
             'type': 'outlined',
             'titles': ('Proyecto', 'Project'),
             'language': self.language_value } )
         
+        self.gui_widgets['projects_menu'] = MD3Menu(self.gui_widgets['project_card'], {
+            'position': (8, 48),
+            'width': 164,
+            'type': 'outlined',
+            'set': -1,
+            'language': self.language_value,
+            'index_changed': parent.on_projects_changed } )
+        
+        self.gui_widgets['project_folders_button'] = MD3Button(self.gui_widgets['project_card'], {
+            'position': (100, 88),
+            'type': 'filled',
+            'icon': 'results_folder',
+            'theme_color': self.theme_color,
+            'clicked': parent.on_project_folder_button_clicked } )
+        
         self.gui_widgets['project_new_button'] = MD3Button(self.gui_widgets['project_card'], {
-            'position': (140, 48),
+            'position': (140, 88),
             'type': 'filled',
             'icon': 'new',
             'theme_color': self.theme_color,
@@ -99,7 +114,7 @@ class UI(QWidget):
         # Card Information
         # ----------------
         self.gui_widgets['info_card'] = MD3Card(parent, {
-            'position': (8, 104),
+            'position': (8, 144),
             'size': (180, 176),
             'type': 'outlined',
             'titles': ('Información', 'Information'),
@@ -165,7 +180,7 @@ class UI(QWidget):
         # Card Labelling
         # --------------
         self.gui_widgets['labelling_card'] = MD3Card(parent, { 
-            'position': (8, 288),
+            'position': (8, 328),
             'size': (180, 128),
             'type': 'outlined',
             'titles': ('Etiquetado', 'Labelling'),
@@ -210,7 +225,7 @@ class UI(QWidget):
         # Card Labelling Options
         # ----------------------
         self.gui_widgets['options_card'] = MD3Card(parent, { 
-            'position': (8, 424),
+            'position': (8, 464),
             'size': (180, 148),
             'type': 'outlined',
             'titles': ('Opciones', 'Options'),
