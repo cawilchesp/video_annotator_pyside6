@@ -5,13 +5,13 @@ This file contains main UI class and methods to control components operations.
 """
 
 from PySide6 import QtGui, QtWidgets
-from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog
 from PySide6.QtCore import QTimer
 from PySide6.QtGui import QPixmap
 
 import sys
 import yaml
-import pathlib
+from pathlib import Path
 
 import cv2
 
@@ -155,6 +155,32 @@ class MainWindow(QMainWindow):
     # ------------------
     # Funciones Proyecto
     # ------------------
+    def on_projects_changed(self) -> None:
+        return None
+
+
+    def on_project_folder_button_clicked(self) -> None:
+        """ Folder selection dialog where annotations are saved """
+        folder_dialog = { 0: 'Seleccione la carpeta del proyecto',
+                          1: 'Select project folder' }
+        selected_folder = QFileDialog.getExistingDirectory(parent = self,
+            caption = folder_dialog[self.language_value],
+            dir = self.project_folder )
+        
+        if selected_folder:
+            self.project_folder = str(Path(selected_folder))
+            self.config['PROJECT_FOLDER'] = self.project_folder
+            with open(self.settings_file, 'w') as file:
+                yaml.dump(self.config, file)
+            # Llenar el menú con todas las subcarpetas presentes en la 
+            # carpeta seleccionada
+        else:
+            self.info_app = InfoMessageApp({'size': (300, 100), 'type': 'error',
+                'messages': ("No se seleccionó la carpeta del proyecto",
+                             "Project folder wasn't selected") })
+            self.info_app.exec()
+    
+
     def on_project_new_button_clicked(self) -> None:
         """ Configure new project """
         self.new_window = NewProject()
@@ -171,18 +197,18 @@ class MainWindow(QMainWindow):
             frame_extraction = self.project_info['frame_extraction']
 
             # Creación de la carpeta del proyecto
-            main_project_folder = pathlib.Path(f'{project_folder}/{project_name}')
+            main_project_folder = Path(f'{project_folder}/{project_name}')
             if not main_project_folder.exists():
                 main_project_folder.mkdir()
 
                 # Creación de sub-carpetas
-                self.frames_folder = pathlib.Path(f'{project_folder}/{project_name}/frames')
+                self.frames_folder = Path(f'{project_folder}/{project_name}/frames')
                 self.frames_folder.mkdir()
 
-                self.labeled_folder = pathlib.Path(f'{project_folder}/{project_name}/labels')
+                self.labeled_folder = Path(f'{project_folder}/{project_name}/labels')
                 self.labeled_folder.mkdir()
 
-                self.resized_folder = pathlib.Path(f'{project_folder}/{project_name}/resized')
+                self.resized_folder = Path(f'{project_folder}/{project_name}/resized')
                 self.resized_folder.mkdir()
 
                 # Extracción de frames del video
@@ -197,7 +223,7 @@ class MainWindow(QMainWindow):
                 self.aspect_ratio = float(self.video_width / self.video_height)
 
                 # Presentación de Información
-                self.ui.gui_widgets['filename_value'].setText(f'{pathlib.Path(video_file).name}')
+                self.ui.gui_widgets['filename_value'].setText(f'{Path(video_file).name}')
                 self.ui.gui_widgets['size_value'].setText(f'{self.video_width} X {self.video_height}')
                 self.ui.gui_widgets['total_frames_value'].setText(f'{self.total_frames}')
                 self.ui.gui_widgets['fps_value'].setText(f"{self.video_fps}")
