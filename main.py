@@ -5,8 +5,8 @@ This file contains main UI class and methods to control components operations.
 """
 
 from PySide6 import QtGui, QtWidgets
-from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog
-from PySide6.QtCore import QTimer
+from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QRubberBand
+from PySide6.QtCore import QTimer, QRect, QSize
 from PySide6.QtGui import QPixmap
 
 import sys
@@ -68,6 +68,9 @@ class MainWindow(QMainWindow):
         self.project_info = None
         self.active_class = ''
         self.active_color = ''
+
+        self.rubberBand = None
+        self.origin = None
 
         # ---
         # GUI
@@ -278,6 +281,22 @@ class MainWindow(QMainWindow):
         # Activa la herramienta rectángulo
         # Dibuja en self.current_image
         return None
+    
+    def mousePressEvent(self, event):
+        self.origin = event.pos()
+        ic(self.origin)
+        if not self.rubberBand:
+            self.rubberBand = QRubberBand(QRubberBand.Shape.Rectangle, self.ui.gui_widgets['video_label'])
+        self.rubberBand.setGeometry(QRect(self.origin, QSize()))
+        self.rubberBand.show()
+
+    def mouseMoveEvent(self, event):
+        self.rubberBand.setGeometry(QRect(self.origin, event.pos()).normalized())
+
+    def mouseReleaseEvent(self, event):
+        self.rubberBand.hide()
+        # determine selection, for example using QRect::intersects()
+        # and QRect::contains().
     
     # ------------------
     # Funciones Opciones
