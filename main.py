@@ -6,7 +6,7 @@ This file contains main UI class and methods to control components operations.
 
 from PySide6 import QtGui, QtWidgets
 from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QRubberBand
-from PySide6.QtCore import QTimer, QRect, QSize
+from PySide6.QtCore import QTimer, QRect, QSize, QPoint
 from PySide6.QtGui import QPixmap
 
 import sys
@@ -70,7 +70,10 @@ class MainWindow(QMainWindow):
         self.active_color = ''
 
         self.rubberBand = None
-        self.origin = None
+        self.x_label = None
+        self.y_label = None
+        self.start_point = None
+        self.end_point = None
 
         # ---
         # GUI
@@ -283,15 +286,18 @@ class MainWindow(QMainWindow):
         return None
     
     def mousePressEvent(self, event):
-        self.origin = event.pos()
-        ic(self.origin)
+        self.x_label = self.ui.gui_widgets['video_output_card'].x() + 8
+        self.y_label = self.ui.gui_widgets['video_output_card'].y() + 48
+        self.start_point = QPoint(event.pos().x() - self.x_label, event.pos().y() - self.y_label)
+        
         if not self.rubberBand:
             self.rubberBand = QRubberBand(QRubberBand.Shape.Rectangle, self.ui.gui_widgets['video_label'])
-        self.rubberBand.setGeometry(QRect(self.origin, QSize()))
+        self.rubberBand.setGeometry(QRect(self.start_point, QSize()))
         self.rubberBand.show()
 
     def mouseMoveEvent(self, event):
-        self.rubberBand.setGeometry(QRect(self.origin, event.pos()).normalized())
+        self.end_point = QPoint(event.pos().x() - self.x_label, event.pos().y() - self.y_label)
+        self.rubberBand.setGeometry(QRect(self.start_point, self.end_point).normalized())
 
     def mouseReleaseEvent(self, event):
         self.rubberBand.hide()
