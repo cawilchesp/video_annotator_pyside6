@@ -6,8 +6,8 @@ This file contains main UI class and methods to control components operations.
 
 from PySide6 import QtGui, QtWidgets
 from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QRubberBand
-from PySide6.QtCore import QTimer, QRect, QSize, QPoint
-from PySide6.QtGui import QPixmap
+from PySide6.QtCore import QTimer, QRect, QSize, QPoint, Qt
+from PySide6.QtGui import QPixmap, QColor
 
 import sys
 import yaml
@@ -74,6 +74,8 @@ class MainWindow(QMainWindow):
         self.y_label = None
         self.start_point = None
         self.end_point = None
+
+        self.box_button_state = False
 
         # ---
         # GUI
@@ -278,12 +280,17 @@ class MainWindow(QMainWindow):
         return None
 
     def on_polygon_button_clicked(self):
+        self.ui.gui_widgets['video_label'].setCursor(Qt.CursorShape.CrossCursor)
         return None
 
     def on_box_button_clicked(self):
-        # Activa la herramienta rectángulo
-        # Dibuja en self.current_image
-        return None
+        self.box_button_state = not self.box_button_state
+        if self.box_button_state:
+            self.ui.gui_widgets['box_button'].setStyleSheet('border-width: 3px; border-color: hsl(348, 100%, 61%)')
+            self.ui.gui_widgets['video_label'].setCursor(Qt.CursorShape.CrossCursor)
+        else:
+            self.ui.gui_widgets['box_button'].setStyleSheet('border-width: 0px')
+            self.ui.gui_widgets['video_label'].setCursor(Qt.CursorShape.ArrowCursor)
     
     def mousePressEvent(self, event):
         self.x_label = self.ui.gui_widgets['video_output_card'].x() + 8
@@ -301,8 +308,30 @@ class MainWindow(QMainWindow):
 
     def mouseReleaseEvent(self, event):
         self.rubberBand.hide()
-        # determine selection, for example using QRect::intersects()
-        # and QRect::contains().
+        x1, y1 = self.image_coordinates(self.start_point.x(), self.start_point.y())
+        x2, y2 = self.image_coordinates(self.end_point.x(), self.end_point.y())
+        color_rgb = QColor.fromString(self.active_color).getRgb()
+
+        if self.box_button_state:
+            cv2.rectangle(
+                img=self.current_image,
+                pt1=(x1, y1),
+                pt2=(x2, y2),
+                color=(color_rgb[2], color_rgb[1], color_rgb[0]),
+                thickness=1
+            )
+        
+        qt_image = self.convert_cv_qt(self.current_image)
+        self.ui.gui_widgets['video_label'].setPixmap(qt_image)
+
+    def image_coordinates(self, x_label: int, y_label: int):
+        width_ratio = self.video_width / self.ui.gui_widgets['video_label'].width()
+        height_ratio = self.video_height / self.ui.gui_widgets['video_label'].height()
+
+        x_image = int(x_label * width_ratio)
+        y_image = int(y_label * height_ratio)
+
+        return (x_image, y_image)
     
     # ------------------
     # Funciones Opciones
