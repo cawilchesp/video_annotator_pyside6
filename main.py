@@ -70,11 +70,12 @@ class MainWindow(QMainWindow):
         self.active_color = ''
 
         self.rubberBand = None
-        self.x_label = None
-        self.y_label = None
+        self.top_label = None
+        self.left_label = None
         self.start_point = None
         self.end_point = None
 
+        self.mouse_selection_state = False
         self.box_button_state = False
 
         # ---
@@ -288,41 +289,57 @@ class MainWindow(QMainWindow):
         if self.box_button_state:
             self.ui.gui_widgets['box_button'].setStyleSheet('border-width: 3px; border-color: hsl(348, 100%, 61%)')
             self.ui.gui_widgets['video_label'].setCursor(Qt.CursorShape.CrossCursor)
+            self.mouse_selection_state = True
         else:
             self.ui.gui_widgets['box_button'].setStyleSheet('border-width: 0px')
             self.ui.gui_widgets['video_label'].setCursor(Qt.CursorShape.ArrowCursor)
+            self.mouse_selection_state = False
     
     def mousePressEvent(self, event):
-        self.x_label = self.ui.gui_widgets['video_output_card'].x() + 8
-        self.y_label = self.ui.gui_widgets['video_output_card'].y() + 48
-        self.start_point = QPoint(event.pos().x() - self.x_label, event.pos().y() - self.y_label)
-        
-        if not self.rubberBand:
-            self.rubberBand = QRubberBand(QRubberBand.Shape.Rectangle, self.ui.gui_widgets['video_label'])
-        self.rubberBand.setGeometry(QRect(self.start_point, QSize()))
-        self.rubberBand.show()
+        if self.mouse_selection_state:
+            self.top_label = self.ui.gui_widgets['video_output_card'].y() + 48
+            self.left_label = self.ui.gui_widgets['video_output_card'].x() + 8
+
+            self.start_point = QPoint(event.position().x() - self.left_label, event.position().y() - self.top_label)
+
+            if ((0 < self.start_point.x() < self.ui.gui_widgets['video_label'].width()) and 
+                (0 < self.start_point.y() < self.ui.gui_widgets['video_label'].height())):
+                if not self.rubberBand:
+                    self.rubberBand = QRubberBand(QRubberBand.Shape.Rectangle, self.ui.gui_widgets['video_label'])
+                self.rubberBand.setGeometry(QRect(self.start_point, QSize()))
+                self.rubberBand.show()
 
     def mouseMoveEvent(self, event):
-        self.end_point = QPoint(event.pos().x() - self.x_label, event.pos().y() - self.y_label)
-        self.rubberBand.setGeometry(QRect(self.start_point, self.end_point).normalized())
+        if self.rubberBand:
+            self.end_point = QPoint(event.position().x() - self.left_label, event.position().y() - self.top_label)
+            if self.end_point.x() < 0:
+                self.end_point.setX(0)
+            elif self.end_point.x() > self.ui.gui_widgets['video_label'].width() - 1:
+                self.end_point.setX(self.ui.gui_widgets['video_label'].width() - 1)
+            if self.end_point.y() < 0:
+                self.end_point.setY(0)
+            elif self.end_point.y() > self.ui.gui_widgets['video_label'].height() - 1:
+                self.end_point.setY(self.ui.gui_widgets['video_label'].height() - 1)
+            self.rubberBand.setGeometry(QRect(self.start_point, self.end_point).normalized())
 
     def mouseReleaseEvent(self, event):
-        self.rubberBand.hide()
-        x1, y1 = self.image_coordinates(self.start_point.x(), self.start_point.y())
-        x2, y2 = self.image_coordinates(self.end_point.x(), self.end_point.y())
-        color_rgb = QColor.fromString(self.active_color).getRgb()
+        if self.rubberBand:
+            self.rubberBand.hide()
+            x1, y1 = self.image_coordinates(self.start_point.x(), self.start_point.y())
+            x2, y2 = self.image_coordinates(self.end_point.x(), self.end_point.y())
+            color_rgb = QColor.fromString(self.active_color).getRgb()
 
-        if self.box_button_state:
-            cv2.rectangle(
-                img=self.current_image,
-                pt1=(x1, y1),
-                pt2=(x2, y2),
-                color=(color_rgb[2], color_rgb[1], color_rgb[0]),
-                thickness=1
-            )
-        
-        qt_image = self.convert_cv_qt(self.current_image)
-        self.ui.gui_widgets['video_label'].setPixmap(qt_image)
+            if self.box_button_state:
+                cv2.rectangle(
+                    img=self.current_image,
+                    pt1=(x1, y1),
+                    pt2=(x2, y2),
+                    color=(color_rgb[2], color_rgb[1], color_rgb[0]),
+                    thickness=1
+                )
+            
+            qt_image = self.convert_cv_qt(self.current_image)
+            self.ui.gui_widgets['video_label'].setPixmap(qt_image)
 
     def image_coordinates(self, x_label: int, y_label: int):
         width_ratio = self.video_width / self.ui.gui_widgets['video_label'].width()
