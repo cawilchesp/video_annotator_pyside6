@@ -74,6 +74,7 @@ class MainWindow(QMainWindow):
         self.left_label = None
         self.start_point = None
         self.end_point = None
+        self.current_boxes = []
 
         self.mouse_selection_state = False
         self.box_button_state = False
@@ -325,15 +326,30 @@ class MainWindow(QMainWindow):
     def mouseReleaseEvent(self, event):
         if self.rubberBand:
             self.rubberBand.hide()
-            x1, y1 = self.image_coordinates(self.start_point.x(), self.start_point.y())
-            x2, y2 = self.image_coordinates(self.end_point.x(), self.end_point.y())
+
+            annotated_image = self.current_image.copy()
+
+
+            # Agregar puntos a lista de boxes
+            # Imprimir boxes en copia: class x_center y_center width height
+            # Presentar copia en label
+
+            # Las funciones de undo y redo modifican la lista de boxes y el proceso se repite
+
+            box_x_center, box_y_center, box_width, box_height = self.image_coordinates(self.start_point, self.end_point)
+            
+            left = int((box_x_center - box_width/2) * self.video_width)
+            top = int((box_y_center - box_height/2) * self.video_height)
+            right = int((box_x_center + box_width/2) * self.video_width)
+            bottom = int((box_y_center + box_height/2) * self.video_height)
+
             color_rgb = QColor.fromString(self.active_color).getRgb()
 
             if self.box_button_state:
                 cv2.rectangle(
                     img=self.current_image,
-                    pt1=(x1, y1),
-                    pt2=(x2, y2),
+                    pt1=(left, top),
+                    pt2=(right, bottom),
                     color=(color_rgb[2], color_rgb[1], color_rgb[0]),
                     thickness=1
                 )
@@ -341,14 +357,20 @@ class MainWindow(QMainWindow):
             qt_image = self.convert_cv_qt(self.current_image)
             self.ui.gui_widgets['video_label'].setPixmap(qt_image)
 
-    def image_coordinates(self, x_label: int, y_label: int):
-        width_ratio = self.video_width / self.ui.gui_widgets['video_label'].width()
-        height_ratio = self.video_height / self.ui.gui_widgets['video_label'].height()
 
-        x_image = int(x_label * width_ratio)
-        y_image = int(y_label * height_ratio)
 
-        return (x_image, y_image)
+    def image_coordinates(self, point_1: QPoint, point_2: QPoint):
+        point_1_x = point_1.x() / self.ui.gui_widgets['video_label'].width()
+        point_1_y = point_1.y() / self.ui.gui_widgets['video_label'].height()
+        point_2_x = point_2.x() / self.ui.gui_widgets['video_label'].width()
+        point_2_y = point_2.y() / self.ui.gui_widgets['video_label'].height()
+
+        box_x_center = (point_1_x + point_2_x) / 2
+        box_y_center = (point_1_y + point_2_y) / 2
+        box_width = abs(point_2_x - point_1_x)
+        box_height = abs(point_2_y - point_1_y)
+
+        return (box_x_center, box_y_center, box_width, box_height)
     
     # ------------------
     # Funciones Opciones
