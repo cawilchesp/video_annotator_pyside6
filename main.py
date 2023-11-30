@@ -67,6 +67,7 @@ class MainWindow(QMainWindow):
 
         self.project_info = None
         self.active_class = ''
+        self.active_class_index = None
         self.active_color = ''
 
         self.rubberBand = None
@@ -272,9 +273,10 @@ class MainWindow(QMainWindow):
     # --------------------
     # Funciones Etiquetado
     # --------------------
-    def on_classes_changed(self):
+    def on_classes_changed(self, index):
         classes = self.project_info['classes']
         self.active_class = self.ui.gui_widgets['classes_menu'].currentText()
+        self.active_class_index = index
         self.active_color = classes[self.active_class]
         self.ui.gui_widgets['class_color_label'].set_color_label(self.active_color)
 
@@ -328,36 +330,32 @@ class MainWindow(QMainWindow):
             self.rubberBand.hide()
 
             annotated_image = self.current_image.copy()
+            bounding_box = self.image_coordinates(self.start_point, self.end_point)
+            self.current_boxes.append([self.active_class_index, bounding_box[0], bounding_box[1], bounding_box[2], bounding_box[3]])
 
+            for box in self.current_boxes:
+                class_index = box[0]
+                left = int((box[1] - box[3]/2) * self.video_width)
+                top = int((box[2] - box[4]/2) * self.video_height)
+                right = int((box[1] + box[3]/2) * self.video_width)
+                bottom = int((box[2] + box[4]/2) * self.video_height)
 
-            # Agregar puntos a lista de boxes
-            # Imprimir boxes en copia: class x_center y_center width height
-            # Presentar copia en label
+                classes = self.project_info['classes']
+                classes_keys = list(classes.keys())
+                color_hex = classes[classes_keys[class_index]]
+                color_rgb = QColor.fromString(color_hex).getRgb()
 
-            # Las funciones de undo y redo modifican la lista de boxes y el proceso se repite
-
-            box_x_center, box_y_center, box_width, box_height = self.image_coordinates(self.start_point, self.end_point)
+                if self.box_button_state:
+                    cv2.rectangle(
+                        img=annotated_image,
+                        pt1=(left, top),
+                        pt2=(right, bottom),
+                        color=(color_rgb[2], color_rgb[1], color_rgb[0]),
+                        thickness=1
+                    )
             
-            left = int((box_x_center - box_width/2) * self.video_width)
-            top = int((box_y_center - box_height/2) * self.video_height)
-            right = int((box_x_center + box_width/2) * self.video_width)
-            bottom = int((box_y_center + box_height/2) * self.video_height)
-
-            color_rgb = QColor.fromString(self.active_color).getRgb()
-
-            if self.box_button_state:
-                cv2.rectangle(
-                    img=self.current_image,
-                    pt1=(left, top),
-                    pt2=(right, bottom),
-                    color=(color_rgb[2], color_rgb[1], color_rgb[0]),
-                    thickness=1
-                )
-            
-            qt_image = self.convert_cv_qt(self.current_image)
+            qt_image = self.convert_cv_qt(annotated_image)
             self.ui.gui_widgets['video_label'].setPixmap(qt_image)
-
-
 
     def image_coordinates(self, point_1: QPoint, point_2: QPoint):
         point_1_x = point_1.x() / self.ui.gui_widgets['video_label'].width()
