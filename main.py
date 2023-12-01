@@ -79,6 +79,8 @@ class MainWindow(QMainWindow):
 
         self.mouse_selection_state = False
         self.box_button_state = False
+        self.polygon_button_state = False
+        self.drag_button_state = False
 
         # ---
         # GUI
@@ -280,12 +282,30 @@ class MainWindow(QMainWindow):
         self.active_color = classes[self.active_class]
         self.ui.gui_widgets['class_color_label'].set_color_label(self.active_color)
 
+
     def on_drag_button_clicked(self):
-        return None
+        self.drag_button_state = not self.drag_button_state
+        if self.drag_button_state:
+            self.ui.gui_widgets['drag_button'].setStyleSheet('border-width: 3px; border-color: hsl(348, 100%, 61%)')
+            self.ui.gui_widgets['video_label'].setCursor(Qt.CursorShape.OpenHandCursor)
+            self.mouse_selection_state = True
+        else:
+            self.ui.gui_widgets['drag_button'].setStyleSheet('border-width: 0px')
+            self.ui.gui_widgets['video_label'].setCursor(Qt.CursorShape.ArrowCursor)
+            self.mouse_selection_state = False
+        
 
     def on_polygon_button_clicked(self):
-        self.ui.gui_widgets['video_label'].setCursor(Qt.CursorShape.CrossCursor)
-        return None
+        self.polygon_button_state = not self.polygon_button_state
+        if self.polygon_button_state:
+            self.ui.gui_widgets['polygon_button'].setStyleSheet('border-width: 3px; border-color: hsl(348, 100%, 61%)')
+            self.ui.gui_widgets['video_label'].setCursor(Qt.CursorShape.CrossCursor)
+            self.mouse_selection_state = True
+        else:
+            self.ui.gui_widgets['polygon_button'].setStyleSheet('border-width: 0px')
+            self.ui.gui_widgets['video_label'].setCursor(Qt.CursorShape.ArrowCursor)
+            self.mouse_selection_state = False
+        
 
     def on_box_button_clicked(self):
         self.box_button_state = not self.box_button_state
@@ -298,6 +318,9 @@ class MainWindow(QMainWindow):
             self.ui.gui_widgets['video_label'].setCursor(Qt.CursorShape.ArrowCursor)
             self.mouse_selection_state = False
     
+    # ---------------
+    # Funciones Mouse
+    # ---------------
     def mousePressEvent(self, event):
         if self.mouse_selection_state:
             self.top_label = self.ui.gui_widgets['video_output_card'].y() + 48
