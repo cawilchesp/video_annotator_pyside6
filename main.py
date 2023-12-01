@@ -352,7 +352,9 @@ class MainWindow(QMainWindow):
         if self.rubberBand:
             self.rubberBand.hide()
 
-            annotated_image = self.current_image.copy()
+            qt_image = self.convert_cv_qt(self.current_image)
+            painter = QtGui.QPainter(qt_image)
+            
             bounding_box = self.image_coordinates(self.start_point, self.end_point)
             self.current_boxes.append([self.active_class_index, bounding_box[0], bounding_box[1], bounding_box[2], bounding_box[3]])
 
@@ -365,20 +367,23 @@ class MainWindow(QMainWindow):
 
                 classes = self.project_info['classes']
                 classes_keys = list(classes.keys())
-                color_hex = classes[classes_keys[class_index]]
-                color_rgb = QColor.fromString(color_hex).getRgb()
+                color_rgb = QColor.fromString(classes[classes_keys[class_index]])
+                pen = QtGui.QPen()
+                pen.setWidth(1)
+                pen.setColor(color_rgb)
+                painter.setPen(pen)
 
                 if self.box_button_state:
-                    cv2.rectangle(
-                        img=annotated_image,
-                        pt1=(left, top),
-                        pt2=(right, bottom),
-                        color=(color_rgb[2], color_rgb[1], color_rgb[0]),
-                        thickness=1
-                    )
-            
-            qt_image = self.convert_cv_qt(annotated_image)
+                    painter.drawRect(QRect(QPoint(left,top), QPoint(right,bottom)))
+
+            painter.end()
             self.ui.gui_widgets['video_label'].setPixmap(qt_image)
+
+
+
+
+
+
 
     def image_coordinates(self, point_1: QPoint, point_2: QPoint):
         point_1_x = point_1.x() / self.ui.gui_widgets['video_label'].width()
