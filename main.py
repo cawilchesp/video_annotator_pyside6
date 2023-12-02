@@ -9,6 +9,9 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QRubberBan
 from PySide6.QtCore import QTimer, QRect, QSize, QPoint, Qt
 from PySide6.QtGui import QPixmap, QColor
 
+from ultralytics import YOLO
+import supervision as sv
+
 import sys
 import yaml
 from pathlib import Path
@@ -20,6 +23,8 @@ from dialogs.about_app import AboutApp
 from dialogs.info_message import InfoMessageApp
 from forms.project import NewProject
 import backend
+
+from tools.annotators import box_annotations
 
 # For debugging
 from icecream import ic
@@ -519,38 +524,29 @@ class MainWindow(QMainWindow):
         self.ui.gui_widgets['video_label'].setPixmap(qt_image)
 
 
-    # def autobox_detections(self):
-        # self.cap.set(cv2.CAP_PROP_POS_FRAMES, self.frame_number)
-        # _, image = self.cap.read()
-        # annotated_image = image.copy()
-        
-        # class_filter = [ value[1] for value in self.class_options.values() if value[0] ]
-        
-        # # Run YOLOv8 inference
-        # results = self.yolov8_model(
-        #     source=image,
-        #     imgsz=640,
-        #     conf=0.5,
-        #     device=0,
-        #     agnostic_nms=True,
-        #     classes=class_filter,
-        #     retina_masks=True,
-        #     verbose=False
-        # )[0]
+    def autobox_detections(self):
+        model = YOLO(f"weights/yolov8m.pt")
+        annotated_image = self.current_image.copy()
+        class_filter = [0,1,2,3,5,7]
+        # Run YOLOv8 inference
+        results = self.model(
+            source=self.current_image,
+            imgsz=640,
+            conf=0.5,
+            device=0,
+            agnostic_nms=True,
+            classes=class_filter,
+            retina_masks=True,
+            verbose=False
+        )[0]
 
-        # detections = sv.Detections.from_ultralytics(results)
+        detections = sv.Detections.from_ultralytics(results)
 
-        # tracks = self.byte_tracker.update_with_detections(detections)
+        # Draw labels
+        labels = [f"{results.names[class_id]} - {tracker_id}" for _, _, _, class_id, tracker_id in detections]
 
-        # for track in tracks:
-        #     if track[4] not in self.track_deque:
-        #         self.track_deque[track[4]] = deque(maxlen=64)
-
-        # # Draw labels
-        # labels = [f"{results.names[class_id]} - {tracker_id}" for _, _, _, class_id, tracker_id in tracks]
-
-        # # Draw boxes
-        # annotated_image = box_annotations(annotated_image, tracks, labels)
+        # Draw boxes
+        annotated_image = box_annotations(annotated_image, detections, labels)
 
         # # Draw masks
         # if detections.mask is not None:
