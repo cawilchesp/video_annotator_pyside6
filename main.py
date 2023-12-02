@@ -196,16 +196,14 @@ class MainWindow(QMainWindow):
                 yaml.dump(self.config, file)
 
             # Menu
-            self.projects_list = list(Path(self.project_folder))
-
-
-
-
-
+            self.projects_list = list(Path(self.project_folder).iterdir())
+            for project_name in self.projects_list:
+                self.ui.gui_widgets['projects_menu'].addItem(project_name.name)
+            self.ui.gui_widgets['projects_menu'].setCurrentIndex(-1)
         else:
             self.info_app = InfoMessageApp({'size': (300, 100), 'type': 'error',
-                'messages': ("No se seleccionó la carpeta del proyecto",
-                             "Project folder wasn't selected") })
+                'messages': ("No se seleccionó la carpeta de ubicación de los proyecto",
+                             "The projects location folder wasn't selected") })
             self.info_app.exec()
     
 
