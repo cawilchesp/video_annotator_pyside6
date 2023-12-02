@@ -98,6 +98,7 @@ class MainWindow(QMainWindow):
         self.projects_list = list(Path(self.project_folder).iterdir())
         for project_name in self.projects_list:
             self.ui.gui_widgets['projects_menu'].addItem(project_name.name)
+        self.ui.gui_widgets['projects_menu'].setCurrentIndex(-1)
 
     # -----------------
     # Options Functions
