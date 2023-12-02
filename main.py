@@ -349,6 +349,9 @@ class MainWindow(QMainWindow):
                 self.rubberBand.show()
 
     def mouseMoveEvent(self, event):
+        # Se debe definir no el end point sino el next point
+        # Si es un box, solo son 2 puntos
+        # Si es un polygon, se debe definir cuál va a ser el end point
         if self.rubberBand:
             self.end_point = QPoint(event.position().x() - self.left_label, event.position().y() - self.top_label)
             if self.end_point.x() < 0:
@@ -362,6 +365,18 @@ class MainWindow(QMainWindow):
             self.rubberBand.setGeometry(QRect(self.start_point, self.end_point).normalized())
 
     def mouseReleaseEvent(self, event):
+        # Como el release se activa al soltar el mouse, depende de la herramienta
+        # seleccionada, por lo tanto, se deben definir las condiciones de cuándo
+        # pintar
+        # Si es un box, al soltar, se tendrán ya los 2 puntos y se pintan todos
+        # los cuadros
+        # Si es un polygon, al soltar, se debe pensar cómo iniciar el siguiente
+        # punto. Por eso, se debe pensar si usar QRubberBand para realizar el 
+        # dibujo, o si se cambia a la forma anterior, donde solo se marcan los puntos
+        # sin necesidad de un QRubberBand
+        # Investigar si hay otros rubber bands
+        
+
         if self.rubberBand:
             self.rubberBand.hide()
 
