@@ -65,6 +65,7 @@ class MainWindow(QMainWindow):
         self.total_images = 0
         self.current_image = None
 
+        self.projects_list = None
         self.project_info = None
         self.active_class = ''
         self.active_class_index = None
@@ -90,6 +91,13 @@ class MainWindow(QMainWindow):
         theme_qss_file = f"themes/{self.theme_color}_{theme}_theme.qss"
         with open(theme_qss_file, "r") as theme_qss:
             self.setStyleSheet(theme_qss.read())
+
+        # -------------
+        # Load Projects
+        # -------------
+        self.projects_list = list(Path(self.project_folder).iterdir())
+        for project_name in self.projects_list:
+            self.ui.gui_widgets['projects_menu'].addItem(project_name.name)
 
     # -----------------
     # Options Functions
@@ -169,7 +177,7 @@ class MainWindow(QMainWindow):
     # Funciones Proyecto
     # ------------------
     def on_projects_changed(self) -> None:
-        return None
+        print(self.ui.gui_widgets['projects_menu'].currentIndex())
 
 
     def on_project_folder_button_clicked(self) -> None:
@@ -185,8 +193,14 @@ class MainWindow(QMainWindow):
             self.config['PROJECT_FOLDER'] = self.project_folder
             with open(self.settings_file, 'w') as file:
                 yaml.dump(self.config, file)
-            # Llenar el menú con todas las subcarpetas presentes en la 
-            # carpeta seleccionada
+
+            # Menu
+            self.projects_list = list(Path(self.project_folder))
+
+
+
+
+
         else:
             self.info_app = InfoMessageApp({'size': (300, 100), 'type': 'error',
                 'messages': ("No se seleccionó la carpeta del proyecto",
@@ -378,12 +392,6 @@ class MainWindow(QMainWindow):
 
             painter.end()
             self.ui.gui_widgets['video_label'].setPixmap(qt_image)
-
-
-
-
-
-
 
     def image_coordinates(self, point_1: QPoint, point_2: QPoint):
         point_1_x = point_1.x() / self.ui.gui_widgets['video_label'].width()
