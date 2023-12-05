@@ -451,7 +451,7 @@ class MainWindow(QMainWindow):
         return None
 
     def on_autobox_button_clicked(self):
-        return None
+        self.autobox_detections()
 
     def on_autopolygon_button_clicked(self):
         return None
@@ -525,11 +525,13 @@ class MainWindow(QMainWindow):
 
 
     def autobox_detections(self):
-        model = YOLO(f"weights/yolov8m.pt")
+        model = YOLO("weights/yolov8m.pt")
+
         annotated_image = self.current_image.copy()
         class_filter = [0,1,2,3,5,7]
+        ic(class_filter)
         # Run YOLOv8 inference
-        results = self.model(
+        results = model(
             source=self.current_image,
             imgsz=640,
             conf=0.5,
@@ -541,6 +543,7 @@ class MainWindow(QMainWindow):
         )[0]
 
         detections = sv.Detections.from_ultralytics(results)
+        ic(detections)
 
         # Draw labels
         labels = [f"{results.names[class_id]} - {tracker_id}" for _, _, _, class_id, tracker_id in detections]
@@ -555,8 +558,9 @@ class MainWindow(QMainWindow):
         # # Draw tracks
         # annotated_image = track_annotations(annotated_image, tracks, self.track_deque, 'centroid')
 
-        # qt_image = self.convert_cv_qt(annotated_image)
-        # self.ui.gui_widgets['video_label'].setPixmap(qt_image)
+        qt_image = self.convert_cv_qt(annotated_image)
+        self.ui.gui_widgets['video_label'].setPixmap(qt_image)
+        ic(qt_image)
 
 
     def play_forward(self):
